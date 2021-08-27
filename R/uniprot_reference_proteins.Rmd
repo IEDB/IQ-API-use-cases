@@ -1,0 +1,152 @@
+---
+title: "IEDB Uniprot PDB entries"
+author: "Jason Greenbaum"
+date: "7/2/2021"
+output: 
+  html_document:
+    code_folding: show
+    df_print: paged
+    toc: true
+    toc_depth: 4
+    theme: united
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+# IEDB Uniprot entries with associated PDB IDs
+
+This use case came from a practical question of determining how many PDB records are associated with
+each Uniprot record in the IEDB.  It is a basic demonstration of how we can query across systems
+to get a meaningful  result.
+
+## Setup
+
+First, some housekeeping...
+
+```{r}
+library(httr)
+library(jsonlite)
+library(tidyr)
+library(readr)
+library(dplyr)
+```
+
+Define the base URI of the IEDB Query API.
+
+```{r}
+base_uri = 'https://query-api.iedb.org/'
+```
+
+
+## Retrieve list of IEDB Uniprot IDs
+
+Let's set the query string parameters.
+```{r}
+params <- list()
+params[['parent_source_antigen_iri']] = 'like.UNIPROT*'
+params[['select']] = 'parent_source_antigen_id,parent_source_antigen_iri,parent_source_antigen_source_org_iri,parent_source_antigen_name'
+params[['offset']] = 0
+```
+
+Since I know there will be more than 10K records, we will need to fetch 1 page at a time
+and continue to append them onto our tibble.  To be good citizens, we would add a short 'sleep' in
+between calls to the API.
+```{r}
+# initialize 'get_text' so we can page throuth the results
+get_text <- 'NA'
+full_tbl <- tibble()
+while(get_text != '[]') {
+  url <- paste(base_uri, 'antigen_search',sep='')
+  print(paste0("fetching offset: ",params[['offset']]))
+  get_1 = GET(url, query=params)
+  get_text = content(get_1,'text')
+  resp_tbl <- tibble(fromJSON(get_text))
+  full_tbl <- rbind(full_tbl, resp_tbl)
+  params[['offset']] = params[['offset']] + 10000
+  # sleep for 1 second between calls so as not to overload the server
+  Sys.sleep(1)
+}
+```
+
+
+## Fetching PDB IDs associated with each Uniprot ID
+
+Now we need to use the uniprot API to fetch PDB IDs associated with each entry.  First, we have to get the list of IDS. Since they're provided as IRIs, we need to remove the 'UNIPROT:' prefixes.
+
+```{r}
+full_tbl$uniprot_id <- gsub('UNIPROT:','',full_tbl$parent_source_antigen_iri)
+uniprot_ids <- full_tbl$uniprot_id
+```
+
+Now we need to submit them in chunks of 500 to the Uniprot API.  We've commented out this section since it takes a while and instead, saved the PDB IDs in a file, which we load below.
+
+```{r}
+# pdb_tbl <- tibble()
+# pdb_url = 'https://www.uniprot.org/uploadlists/'
+# chunk_size = 500
+# min_index = -chunk_size + 1
+# max_index = 0
+# while (max_index < length(uniprot_ids)) {
+#   min_index = min_index + chunk_size
+#   max_index = max_index + chunk_size
+#   print(paste0("Mapping from ", min_index, " to ", max_index))
+#   cur_ids = uniprot_ids[min_index:max_index]
+#   cur_id_str = paste(cur_ids, collapse = ' ')
+#   pdb_params = list(
+#         'from' = 'ID',
+#         'to'  = 'PDB_ID',
+#         'format' = 'tab',
+#         'query' = cur_id_str
+#   )
+#   get_p = GET(pdb_url, query=pdb_params)
+#   get_p_text = content(get_p,'text')
+#   resp_tbl <- read_tsv(get_p_text)
+#   pdb_tbl <- rbind(pdb_tbl, resp_tbl)
+#   Sys.sleep(1)
+# }
+# 
+# # update the headers and save the pdb IDs as a file
+#names(pdb_tbl) <- c('uniprot_id','pdb_id')
+#write_tsv(pdb_tbl, 'pdb_ids.tsv')
+
+```
+
+Load the PDB IDs from a previously saved file:
+```{r}
+pdb_tbl <- read_tsv('pdb_ids.tsv')
+```
+
+
+## Merge the datasets and tally
+
+```{r}
+merged_tbl <- full_tbl %>%
+  left_join(pdb_tbl,
+            on='uniprot_id',
+  )
+
+collapsed_tbl <- merged_tbl %>%
+  group_by(uniprot_id) %>%
+  dplyr::summarize(pdb_ids=paste(pdb_id, collapse=','),
+            n_pdbs=n()) %>%
+  mutate(n_pdbs=ifelse(pdb_ids == 'NA',0,n_pdbs))
+
+# now we can do an inner join to tie everything together
+collapsed_tbl <- collapsed_tbl %>%
+  inner_join(full_tbl,
+             on='uniprot_id')
+
+```
+
+Now we have everything we want in 1 table.  Let's get some basic stats:
+
+```{r}
+collapsed_tbl %>%
+  group_by(n_pdbs) %>%
+  summarize(n_uniprot_ids=n())
+
+```
+This table shows how many PDB IDs are associated with IEDB Uniprot IDs. So, e.g., 62,504 Uniprot IDs are associated with 0 PDB IDs, 3,236 are associated with 1, and so on... 
