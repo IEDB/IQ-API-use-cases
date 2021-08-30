@@ -13102,7 +13102,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[64]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
@@ -13120,6 +13120,25 @@ div#notebook {
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/jgbaum/.pyenv/versions/3.8.2/envs/jupyter/lib/python3.8/site-packages/pandas/compat/__init__.py:120: UserWarning: Could not import the lzma module. Your installed Python is incomplete. Attempting to use lzma compression will result in a RuntimeError.
+  warnings.warn(msg)
+</pre>
+</div>
+</div>
+
 </div>
 </div>
 
@@ -13171,11 +13190,12 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[65]:</div>
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_params</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;source_organism_iri_search&#39;</span><span class="p">:</span> <span class="s1">&#39;cs.{&quot;NCBITaxon:12637&quot;}&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;select&#39;</span><span class="p">:</span> <span class="s1">&#39;structure_iri,structure_description,curated_source_antigens,iedb_assay_ids,qualitative_measures,source_organism_names,source_organism_names,source_organism_iri_search&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;structure_iri&#39;</span><span class="p">,</span>
               <span class="p">}</span>
 <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;epitope_search&#39;</span>
 <span class="n">full_url</span><span class="o">=</span><span class="n">base_uri</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">table_name</span>
@@ -13197,7 +13217,7 @@ div#notebook {
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>curl -X &#39;GET&#39; &#39;https://query-api.iedb.org/epitope_search?source_organism_iri_search=cs.%7B%22NCBITaxon%3A12637%22%7D&amp;select=structure_iri%2Cstructure_description%2Ccurated_source_antigens%2Ciedb_assay_ids%2Cqualitative_measures%2Csource_organism_names%2Csource_organism_names%2Csource_organism_iri_search&#39;
+<pre>curl -X &#39;GET&#39; &#39;https://query-api.iedb.org/epitope_search?source_organism_iri_search=cs.%7B%22NCBITaxon%3A12637%22%7D&amp;select=structure_iri%2Cstructure_description%2Ccurated_source_antigens%2Ciedb_assay_ids%2Cqualitative_measures%2Csource_organism_names%2Csource_organism_names%2Csource_organism_iri_search&amp;order=structure_iri&#39;
 </pre>
 </div>
 </div>
@@ -13216,7 +13236,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()[:</span><span class="mi">1</span><span class="p">],</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
@@ -13238,50 +13258,34 @@ div#notebook {
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[
     {
-        &#34;structure_iri&#34;: &#34;IEDB_EPITOPE:184885&#34;,
-        &#34;structure_description&#34;: &#34;MPLVMAWRT&#34;,
+        &#34;structure_iri&#34;: &#34;IEDB_EPITOPE:100978&#34;,
+        &#34;structure_description&#34;: &#34;KIEKASFIEVKSCHW&#34;,
         &#34;curated_source_antigens&#34;: [
             {
-                &#34;accession&#34;: &#34;AFP27208.1&#34;,
-                &#34;name&#34;: &#34;polyprotein&#34;,
-                &#34;iri&#34;: &#34;GENPEPT:AFP27208.1&#34;,
-                &#34;starting_position&#34;: 1284,
-                &#34;ending_position&#34;: 1292,
-                &#34;source_organism_name&#34;: &#34;Dengue virus 4 (dengue type 4 virus DEN4)&#34;,
-                &#34;source_organism_iri&#34;: &#34;NCBITaxon:11070&#34;
-            },
-            {
-                &#34;accession&#34;: &#34;Q58HT7.1&#34;,
-                &#34;name&#34;: &#34;Genome polyprotein&#34;,
-                &#34;iri&#34;: &#34;GENPEPT:Q58HT7.1&#34;,
-                &#34;starting_position&#34;: 1284,
-                &#34;ending_position&#34;: 1292,
-                &#34;source_organism_name&#34;: &#34;Dengue virus 4 Philippines/H241/1956&#34;,
-                &#34;source_organism_iri&#34;: &#34;NCBITaxon:408686&#34;
+                &#34;accession&#34;: &#34;CAA78918.1&#34;,
+                &#34;name&#34;: &#34;NS1&#34;,
+                &#34;iri&#34;: &#34;GENPEPT:CAA78918.1&#34;,
+                &#34;starting_position&#34;: 239,
+                &#34;ending_position&#34;: 253,
+                &#34;source_organism_name&#34;: &#34;Dengue virus&#34;,
+                &#34;source_organism_iri&#34;: &#34;NCBITaxon:12637&#34;
             }
         ],
         &#34;iedb_assay_ids&#34;: [
-            1892066,
-            1892367,
-            2094831
+            1619828
         ],
         &#34;qualitative_measures&#34;: [
-            &#34;Negative&#34;,
-            &#34;Positive-Intermediate&#34;,
-            &#34;Positive-Low&#34;
+            &#34;Negative&#34;
         ],
         &#34;source_organism_names&#34;: [
-            &#34;Dengue virus 4 (dengue type 4 virus DEN4)&#34;,
-            &#34;Dengue virus 4 Philippines/H241/1956 (Dengue virus type 4 Philippines/H241/1956)&#34;
+            &#34;Dengue virus&#34;
         ],
         &#34;source_organism_iri_search&#34;: [
             &#34;NCBITaxon:1&#34;,
             &#34;NCBITaxon:10239&#34;,
             &#34;NCBITaxon:11050&#34;,
             &#34;NCBITaxon:11051&#34;,
-            &#34;NCBITaxon:11070&#34;,
             &#34;NCBITaxon:12637&#34;,
-            &#34;NCBITaxon:408686&#34;,
             &#34;OBI:0100026&#34;
         ]
     }
@@ -13304,7 +13308,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[67]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
@@ -13321,7 +13325,7 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[67]:</div>
+    <div class="prompt output_prompt">Out[6]:</div>
 
 
 
@@ -13356,52 +13360,52 @@ div#notebook {
   <tbody>
     <tr>
       <th>0</th>
-      <td>IEDB_EPITOPE:184885</td>
-      <td>MPLVMAWRT</td>
-      <td>[{'accession': 'AFP27208.1', 'name': 'polyprot...</td>
-      <td>[1892066, 1892367, 2094831]</td>
-      <td>[Negative, Positive-Intermediate, Positive-Low]</td>
-      <td>[Dengue virus 4 (dengue type 4 virus DEN4), De...</td>
+      <td>IEDB_EPITOPE:100978</td>
+      <td>KIEKASFIEVKSCHW</td>
+      <td>[{'accession': 'CAA78918.1', 'name': 'NS1', 'i...</td>
+      <td>[1619828]</td>
+      <td>[Negative]</td>
+      <td>[Dengue virus]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>IEDB_EPITOPE:184886</td>
-      <td>MPPLRFLGE</td>
-      <td>[{'accession': 'Q58HT7.1', 'name': 'Genome pol...</td>
-      <td>[1890378]</td>
-      <td>[Positive-Low]</td>
-      <td>[Dengue virus 4 Philippines/H241/1956 (Dengue ...</td>
+      <td>IEDB_EPITOPE:10124</td>
+      <td>DSGCVVSWK</td>
+      <td>[{'accession': 'CAA78918.1', 'name': 'NS1', 'i...</td>
+      <td>[1480241, 1480242]</td>
+      <td>[Positive-High]</td>
+      <td>[Dengue virus 2 Puerto Rico/PR159-S1/1969 (Den...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>IEDB_EPITOPE:184887</td>
-      <td>MPPLRFLGED</td>
-      <td>[{'accession': 'Q58HT7.1', 'name': 'Genome pol...</td>
-      <td>[1890926]</td>
-      <td>[Negative]</td>
-      <td>[Dengue virus 4 Philippines/H241/1956 (Dengue ...</td>
+      <td>IEDB_EPITOPE:10125</td>
+      <td>DSGCVVSWKNKELKC</td>
+      <td>[{'accession': 'AAA42941.1', 'name': 'viral po...</td>
+      <td>[22048, 22049, 22050, 22053, 22632, 22633, 572...</td>
+      <td>[Negative, Positive]</td>
+      <td>[Dengue virus 2 (dengue 2 virus DEN-2), Dengue...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>IEDB_EPITOPE:184888</td>
-      <td>MPSMKRFRKE</td>
-      <td>[{'accession': 'Q6YMS3.1', 'name': 'Genome pol...</td>
-      <td>[1890909, 1892044, 1892345]</td>
-      <td>[Negative]</td>
-      <td>[Dengue virus 3 Martinique/1243/1999 (Dengue v...</td>
+      <td>IEDB_EPITOPE:101410</td>
+      <td>WCCRSCTLPPLRYRGEDGCW</td>
+      <td>[{'accession': '1802191G', 'name': 'nonstructu...</td>
+      <td>[1619824, 2445250, 2445251]</td>
+      <td>[Positive]</td>
+      <td>[Dengue virus, Dengue virus 2 (dengue 2 virus ...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>IEDB_EPITOPE:184889</td>
-      <td>MPSMKRFRR</td>
-      <td>[{'accession': 'P07564.2', 'name': 'Genome pol...</td>
-      <td>[1889155]</td>
-      <td>[Positive-High]</td>
-      <td>[Dengue virus 2 Jamaica/1409/1983 (Dengue viru...</td>
+      <td>IEDB_EPITOPE:102102</td>
+      <td>SYSMCTGKFKVV</td>
+      <td>[{'accession': 'AAM75194.1', 'name': 'envelope...</td>
+      <td>[1620787, 1620789, 1620790, 1620791, 1620792, ...</td>
+      <td>[Positive]</td>
+      <td>[Dengue virus 2 (dengue 2 virus DEN-2)]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
@@ -13416,52 +13420,52 @@ div#notebook {
     </tr>
     <tr>
       <th>9995</th>
-      <td>IEDB_EPITOPE:184875</td>
-      <td>MMILPAALA</td>
-      <td>[{'accession': 'AGO63991.1', 'name': 'polyprot...</td>
-      <td>[1886177, 2094705]</td>
-      <td>[Negative, Positive-High]</td>
-      <td>[Dengue virus, Dengue virus 3 Sri Lanka/1266/2...</td>
+      <td>IEDB_EPITOPE:956751</td>
+      <td>VRKDIPQW</td>
+      <td>[{'accession': 'AQV12160.1', 'name': 'polyprot...</td>
+      <td>[6353841, 6353842, 6353843, 6353844]</td>
+      <td>[Negative]</td>
+      <td>[Dengue virus]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>9996</th>
-      <td>IEDB_EPITOPE:184876</td>
-      <td>MMILPAALAF</td>
-      <td>[{'accession': 'Q6YMS4.1', 'name': 'Genome pol...</td>
-      <td>[1887303, 1887582, 1890697, 1890989, 1892424]</td>
-      <td>[Negative, Positive-High, Positive-Intermediat...</td>
-      <td>[Dengue virus 3 Sri Lanka/1266/2000 (Dengue vi...</td>
+      <td>IEDB_EPITOPE:956756</td>
+      <td>WFKKGSSI</td>
+      <td>[{'accession': 'Q2ES84', 'name': 'Polyprotein'...</td>
+      <td>[6353861, 6353862, 6353863, 6353864]</td>
+      <td>[Negative]</td>
+      <td>[Dengue virus]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>9997</th>
-      <td>IEDB_EPITOPE:184877</td>
-      <td>MMLKLLTEF</td>
-      <td>[{'accession': 'P27909.2', 'name': 'Genome pol...</td>
-      <td>[1887112, 1888769, 1890488]</td>
-      <td>[Positive-High]</td>
-      <td>[Dengue virus 1 Brazil/97-11/1997 (Dengue viru...</td>
+      <td>IEDB_EPITOPE:956765</td>
+      <td>YHGSYEAP</td>
+      <td>[{'accession': 'AKQ00035.1', 'name': 'polyprot...</td>
+      <td>[6353824, 6353825, 6353826, 6353827]</td>
+      <td>[Negative]</td>
+      <td>[Dengue virus 4 (dengue type 4 virus DEN4)]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>9998</th>
-      <td>IEDB_EPITOPE:184878</td>
-      <td>MMLVAPSYGM</td>
-      <td>[{'accession': 'Q58HT7.1', 'name': 'Genome pol...</td>
-      <td>[1886397, 1893426, 1893427]</td>
-      <td>[Negative, Positive-High, Positive-Intermediate]</td>
-      <td>[Dengue virus 4 Philippines/H241/1956 (Dengue ...</td>
+      <td>IEDB_EPITOPE:9668</td>
+      <td>DPLKNDEDH</td>
+      <td>[{'accession': 'P09866.2', 'name': 'Genome pol...</td>
+      <td>[14770, 14772]</td>
+      <td>[Negative, Positive]</td>
+      <td>[Dengue virus 4 (dengue type 4 virus DEN4)]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>9999</th>
-      <td>IEDB_EPITOPE:184880</td>
-      <td>MNRRKRSVT</td>
-      <td>[{'accession': 'AGT63075.1', 'name': 'polyprot...</td>
-      <td>[1890182, 2096814]</td>
-      <td>[Positive, Positive-High]</td>
-      <td>[Dengue virus 1 Brazil/97-11/1997 (Dengue viru...</td>
+      <td>IEDB_EPITOPE:9682</td>
+      <td>DPMALKDFK</td>
+      <td>[{'accession': 'P09866.2', 'name': 'Genome pol...</td>
+      <td>[14792, 14794]</td>
+      <td>[Negative, Positive]</td>
+      <td>[Dengue virus 4 (dengue type 4 virus DEN4)]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
   </tbody>
@@ -13480,14 +13484,15 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>So it looks as though exactly 10,000 records were returned.  This should raise suspicion as 10,000 is the default limit for a 'page' of results.  If you receive 10,000 results it indicates that you are only getting the first page back and you will need to pull the rest of the results in subsequent calls.  This is described further in the <a href="https://help.iedb.org/hc/en-us/articles/4402872882189">IQ-API help material</a>.</p>
-<h3 id="Retrieving-more-than-10,000-records">Retrieving more than 10,000 records<a class="anchor-link" href="#Retrieving-more-than-10,000-records">&#182;</a></h3><p>We will need to retrieve the rest of the records by increasing the 'offset' parameter until we have pulled the complete dataset.  We add a pause of 2 seconds between calls in order to be a good citizen:</p>
+<h3 id="Retrieving-more-than-10,000-records">Retrieving more than 10,000 records<a class="anchor-link" href="#Retrieving-more-than-10,000-records">&#182;</a></h3><p>We will need to retrieve the rest of the records by increasing the 'offset' parameter until we have pulled the complete dataset.  <strong>WARNING:</strong> Whenever requesting a result with multiple pages, <strong>it is <em>essential</em> to add an 'order' keyword</strong>.  Without it, the pages may be inconsistent between calls.</p>
+<p>We also add a pause of 2 seconds between calls in order to be a good citizen:</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[68]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
@@ -13495,7 +13500,6 @@ div#notebook {
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10000</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;offset: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]))</span>
-    <span class="n">full_url</span><span class="o">=</span><span class="n">base_uri</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">table_name</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
@@ -13536,7 +13540,7 @@ Done!
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[69]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span>
@@ -13552,7 +13556,7 @@ Done!
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[69]:</div>
+    <div class="prompt output_prompt">Out[8]:</div>
 
 
 
@@ -13587,52 +13591,52 @@ Done!
   <tbody>
     <tr>
       <th>0</th>
-      <td>IEDB_EPITOPE:184885</td>
-      <td>MPLVMAWRT</td>
-      <td>[{'accession': 'AFP27208.1', 'name': 'polyprot...</td>
-      <td>[1892066, 1892367, 2094831]</td>
-      <td>[Negative, Positive-Intermediate, Positive-Low]</td>
-      <td>[Dengue virus 4 (dengue type 4 virus DEN4), De...</td>
+      <td>IEDB_EPITOPE:100978</td>
+      <td>KIEKASFIEVKSCHW</td>
+      <td>[{'accession': 'CAA78918.1', 'name': 'NS1', 'i...</td>
+      <td>[1619828]</td>
+      <td>[Negative]</td>
+      <td>[Dengue virus]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>IEDB_EPITOPE:184886</td>
-      <td>MPPLRFLGE</td>
-      <td>[{'accession': 'Q58HT7.1', 'name': 'Genome pol...</td>
-      <td>[1890378]</td>
-      <td>[Positive-Low]</td>
-      <td>[Dengue virus 4 Philippines/H241/1956 (Dengue ...</td>
+      <td>IEDB_EPITOPE:10124</td>
+      <td>DSGCVVSWK</td>
+      <td>[{'accession': 'CAA78918.1', 'name': 'NS1', 'i...</td>
+      <td>[1480241, 1480242]</td>
+      <td>[Positive-High]</td>
+      <td>[Dengue virus 2 Puerto Rico/PR159-S1/1969 (Den...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>IEDB_EPITOPE:184887</td>
-      <td>MPPLRFLGED</td>
-      <td>[{'accession': 'Q58HT7.1', 'name': 'Genome pol...</td>
-      <td>[1890926]</td>
-      <td>[Negative]</td>
-      <td>[Dengue virus 4 Philippines/H241/1956 (Dengue ...</td>
+      <td>IEDB_EPITOPE:10125</td>
+      <td>DSGCVVSWKNKELKC</td>
+      <td>[{'accession': 'AAA42941.1', 'name': 'viral po...</td>
+      <td>[22048, 22049, 22050, 22053, 22632, 22633, 572...</td>
+      <td>[Negative, Positive]</td>
+      <td>[Dengue virus 2 (dengue 2 virus DEN-2), Dengue...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>IEDB_EPITOPE:184888</td>
-      <td>MPSMKRFRKE</td>
-      <td>[{'accession': 'Q6YMS3.1', 'name': 'Genome pol...</td>
-      <td>[1890909, 1892044, 1892345]</td>
-      <td>[Negative]</td>
-      <td>[Dengue virus 3 Martinique/1243/1999 (Dengue v...</td>
+      <td>IEDB_EPITOPE:101410</td>
+      <td>WCCRSCTLPPLRYRGEDGCW</td>
+      <td>[{'accession': '1802191G', 'name': 'nonstructu...</td>
+      <td>[1619824, 2445250, 2445251]</td>
+      <td>[Positive]</td>
+      <td>[Dengue virus, Dengue virus 2 (dengue 2 virus ...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>IEDB_EPITOPE:184889</td>
-      <td>MPSMKRFRR</td>
-      <td>[{'accession': 'P07564.2', 'name': 'Genome pol...</td>
-      <td>[1889155]</td>
-      <td>[Positive-High]</td>
-      <td>[Dengue virus 2 Jamaica/1409/1983 (Dengue viru...</td>
+      <td>IEDB_EPITOPE:102102</td>
+      <td>SYSMCTGKFKVV</td>
+      <td>[{'accession': 'AAM75194.1', 'name': 'envelope...</td>
+      <td>[1620787, 1620789, 1620790, 1620791, 1620792, ...</td>
+      <td>[Positive]</td>
+      <td>[Dengue virus 2 (dengue 2 virus DEN-2)]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
@@ -13647,52 +13651,52 @@ Done!
     </tr>
     <tr>
       <th>9999</th>
-      <td>IEDB_EPITOPE:184880</td>
-      <td>MNRRKRSVT</td>
-      <td>[{'accession': 'AGT63075.1', 'name': 'polyprot...</td>
-      <td>[1890182, 2096814]</td>
-      <td>[Positive, Positive-High]</td>
-      <td>[Dengue virus 1 Brazil/97-11/1997 (Dengue viru...</td>
+      <td>IEDB_EPITOPE:9682</td>
+      <td>DPMALKDFK</td>
+      <td>[{'accession': 'P09866.2', 'name': 'Genome pol...</td>
+      <td>[14792, 14794]</td>
+      <td>[Negative, Positive]</td>
+      <td>[Dengue virus 4 (dengue type 4 virus DEN4)]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>0</th>
-      <td>IEDB_EPITOPE:184817</td>
-      <td>MGYWIESQK</td>
-      <td>[{'accession': 'Q6YMS3.1', 'name': 'Genome pol...</td>
-      <td>[1886658, 1889441]</td>
-      <td>[Positive-High, Positive-Intermediate]</td>
-      <td>[Dengue virus 3 Martinique/1243/1999 (Dengue v...</td>
+      <td>IEDB_EPITOPE:969058</td>
+      <td>KLKEKQDVFCDSKL</td>
+      <td>[{'accession': 'AAD11533.1', 'name': 'NS1, par...</td>
+      <td>[6478129]</td>
+      <td>[Positive]</td>
+      <td>[Dengue virus 2 (dengue 2 virus DEN-2)]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>IEDB_EPITOPE:184818</td>
-      <td>MGYWIESSK</td>
-      <td>[{'accession': 'Q58HT7.1', 'name': 'Genome pol...</td>
-      <td>[1886710]</td>
-      <td>[Positive-Intermediate]</td>
-      <td>[Dengue virus 4 Philippines/H241/1956 (Dengue ...</td>
+      <td>IEDB_EPITOPE:970</td>
+      <td>AEHTGREI</td>
+      <td>[{'accession': 'NP_739587.1', 'name': 'NS3 pro...</td>
+      <td>[22594, 22595, 22596, 22597, 22598, 22599, 226...</td>
+      <td>[Positive]</td>
+      <td>[Dengue virus 2 16681-PDK53 (Dengue virus type...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>IEDB_EPITOPE:184819</td>
-      <td>MIAGVFFTF</td>
-      <td>[{'accession': 'ACO06174.1', 'name': 'polyprot...</td>
-      <td>[1886361, 1887209, 1887477, 1888890, 1890590, ...</td>
-      <td>[Positive, Positive-High, Positive-Intermediate]</td>
-      <td>[Dengue virus 3 (Dengue virus serotype 3), Den...</td>
+      <td>IEDB_EPITOPE:9978</td>
+      <td>DRGWGN</td>
+      <td>[{'accession': 'AAS49691.2', 'name': 'envelope...</td>
+      <td>[1380221]</td>
+      <td>[Positive]</td>
+      <td>[Dengue virus 2 Jamaica/1409/1983 (Dengue viru...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>IEDB_EPITOPE:184820</td>
-      <td>MIAGVFFTFV</td>
-      <td>[{'accession': 'Q6YMS3.1', 'name': 'Genome pol...</td>
-      <td>[1886058, 1886362, 1889729, 1893334, 1893335]</td>
-      <td>[Positive-High, Positive-Intermediate]</td>
-      <td>[Dengue virus 3 Martinique/1243/1999 (Dengue v...</td>
+      <td>IEDB_EPITOPE:9979</td>
+      <td>DRGWGNGC</td>
+      <td>[{'accession': 'ABX25775.1', 'name': 'envelope...</td>
+      <td>[1267825, 1267826, 1267827, 1267828]</td>
+      <td>[Negative, Positive]</td>
+      <td>[Dengue virus 2 Jamaica/1409/1983 (Dengue viru...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
   </tbody>
@@ -13718,12 +13722,13 @@ Done!
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[70]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_params</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;source_organism_iri_search&#39;</span><span class="p">:</span> <span class="s1">&#39;cs.{&quot;NCBITaxon:11051&quot;}&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;select&#39;</span><span class="p">:</span> <span class="s1">&#39;structure_iri,structure_description,curated_source_antigens,iedb_assay_ids,qualitative_measures,source_organism_names,source_organism_names,source_organism_iri_search&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;structure_iri&#39;</span>
               <span class="p">}</span>
 <span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;epitope_search&#39;</span>
 <span class="n">full_url</span><span class="o">=</span><span class="n">base_uri</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">table_name</span>
@@ -13736,7 +13741,6 @@ Done!
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10000</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;offset: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]))</span>
-    <span class="n">full_url</span><span class="o">=</span><span class="n">base_uri</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">table_name</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">)</span>
     <span class="n">df_flavi</span> <span class="o">=</span> <span class="n">df_flavi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
@@ -13767,7 +13771,7 @@ Done!
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[70]:</div>
+    <div class="prompt output_prompt">Out[9]:</div>
 
 
 
@@ -13802,52 +13806,52 @@ Done!
   <tbody>
     <tr>
       <th>0</th>
-      <td>IEDB_EPITOPE:184821</td>
-      <td>MIAGVLFTF</td>
-      <td>[{'accession': 'Q5UB51.1', 'name': 'Genome pol...</td>
-      <td>[1886479, 1887306, 1887588, 1887774, 1889007, ...</td>
-      <td>[Positive-High, Positive-Intermediate, Positiv...</td>
-      <td>[Dengue virus 3 Singapore/8120/1995 (Dengue vi...</td>
+      <td>IEDB_EPITOPE:10047</td>
+      <td>DRRWCFDGPRTNTIL</td>
+      <td>[{'accession': 'AAF20092.2', 'name': 'polyprot...</td>
+      <td>[1556567, 1964057, 1966001, 1966002, 1966003, ...</td>
+      <td>[Negative, Positive]</td>
+      <td>[West Nile virus]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>IEDB_EPITOPE:184822</td>
-      <td>MIAGVLFTFV</td>
-      <td>[{'accession': 'Q5UB51.1', 'name': 'Genome pol...</td>
-      <td>[1886180, 1886480, 1889840, 1893580, 1893581]</td>
-      <td>[Positive-High, Positive-Intermediate]</td>
-      <td>[Dengue virus 3 China/80-2/1980 (Dengue virus ...</td>
+      <td>IEDB_EPITOPE:10052</td>
+      <td>DRSIALTFLAVGGVL</td>
+      <td>[{'accession': 'AAK62756.1', 'name': 'envelope...</td>
+      <td>[1021156, 1021157, 1021158, 1021159, 1021160, ...</td>
+      <td>[Negative, Positive-High, Positive-Low]</td>
+      <td>[West Nile virus]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>IEDB_EPITOPE:184823</td>
-      <td>MIEEVMRSR</td>
-      <td>[{'accession': 'P27909.2', 'name': 'Genome pol...</td>
-      <td>[1889062]</td>
-      <td>[Positive-Intermediate]</td>
-      <td>[Dengue virus 1 Brazil/97-11/1997 (Dengue viru...</td>
+      <td>IEDB_EPITOPE:100788</td>
+      <td>DNNEVEVITKLGERK</td>
+      <td>[{'accession': 'YP_001527884.1', 'name': 'nons...</td>
+      <td>[1606244]</td>
+      <td>[Positive-Low]</td>
+      <td>[West Nile virus]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>IEDB_EPITOPE:184824</td>
-      <td>MIEEVMRSRW</td>
-      <td>[{'accession': 'P27909.2', 'name': 'Genome pol...</td>
-      <td>[1892174]</td>
-      <td>[Positive-Intermediate]</td>
-      <td>[Dengue virus 1 Brazil/97-11/1997 (Dengue viru...</td>
+      <td>IEDB_EPITOPE:10088</td>
+      <td>DSDDWLNKY</td>
+      <td>[{'accession': 'NP_041726.1', 'name': 'polypro...</td>
+      <td>[1407360, 1457573, 1940224, 2145691, 2147472, ...</td>
+      <td>[Negative, Positive, Positive-High, Positive-I...</td>
+      <td>[Yellow fever virus 17D (Yellow fever virus (S...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>IEDB_EPITOPE:184825</td>
-      <td>MIIMDEAHF</td>
-      <td>[{'accession': 'P27909.2', 'name': 'Genome pol...</td>
-      <td>[1890498]</td>
-      <td>[Positive-High]</td>
-      <td>[Dengue virus 1 Brazil/97-11/1997 (Dengue viru...</td>
+      <td>IEDB_EPITOPE:100938</td>
+      <td>IFVHGPTTVESHGNY</td>
+      <td>[{'accession': 'AGX89731.1', 'name': 'polyprot...</td>
+      <td>[1606239, 6554092]</td>
+      <td>[Positive, Positive-Low]</td>
+      <td>[West Nile virus, West Nile virus goshawk/Aust...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
@@ -13862,52 +13866,52 @@ Done!
     </tr>
     <tr>
       <th>6804</th>
-      <td>IEDB_EPITOPE:952376</td>
-      <td>SHSTRKLQTRSQTWLESR</td>
-      <td>[{'accession': 'AHZ13508.1', 'name': 'polyprot...</td>
-      <td>[6278839]</td>
+      <td>IEDB_EPITOPE:996940</td>
+      <td>YLASVSDLSTRAACP</td>
+      <td>[{'accession': 'AGX89731.1', 'name': 'polyprot...</td>
+      <td>[6554072]</td>
       <td>[Negative]</td>
-      <td>[Zika virus ZIKV/H. sapiens/FrenchPolynesia/10...</td>
+      <td>[West Nile virus goshawk/Austria/2008]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>6805</th>
-      <td>IEDB_EPITOPE:952377</td>
-      <td>SIGGVFTSVGKLVHQIFG</td>
-      <td>[{'accession': 'BAJ72472.1', 'name': 'polyprot...</td>
-      <td>[6279046]</td>
+      <td>IEDB_EPITOPE:996962</td>
+      <td>YTGTDGPCKVPISSV</td>
+      <td>[{'accession': 'AGX89731.1', 'name': 'polyprot...</td>
+      <td>[6554139]</td>
       <td>[Negative]</td>
-      <td>[Dengue virus 1 (dengue type 1 D1 virus)]</td>
+      <td>[West Nile virus goshawk/Austria/2008]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>6806</th>
-      <td>IEDB_EPITOPE:952379</td>
-      <td>SIQPENLEYRIMLSVHGS</td>
-      <td>[{'accession': 'AHZ13508.1', 'name': 'polyprot...</td>
-      <td>[6278866]</td>
-      <td>[Negative]</td>
-      <td>[Zika virus ZIKV/H. sapiens/FrenchPolynesia/10...</td>
+      <td>IEDB_EPITOPE:996983</td>
+      <td>YYVMSVGAKSFLVHR</td>
+      <td>[{'accession': 'AGX89731.1', 'name': 'polyprot...</td>
+      <td>[6554107]</td>
+      <td>[Positive]</td>
+      <td>[West Nile virus goshawk/Austria/2008]</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>6807</th>
-      <td>IEDB_EPITOPE:952380</td>
-      <td>SKKETRCGTGVFVYNDVE</td>
-      <td>[{'accession': 'AHZ13508.1', 'name': 'polyprot...</td>
-      <td>[6278916]</td>
-      <td>[Negative]</td>
-      <td>[Zika virus ZIKV/H. sapiens/FrenchPolynesia/10...</td>
+      <td>IEDB_EPITOPE:9978</td>
+      <td>DRGWGN</td>
+      <td>[{'accession': 'AAS49691.2', 'name': 'envelope...</td>
+      <td>[1380221]</td>
+      <td>[Positive]</td>
+      <td>[Dengue virus 2 Jamaica/1409/1983 (Dengue viru...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
     <tr>
       <th>6808</th>
-      <td>IEDB_EPITOPE:952387</td>
-      <td>SLGLDCEPRTGLDFSDLY</td>
-      <td>[{'accession': 'AHZ13508.1', 'name': 'polyprot...</td>
-      <td>[6278874]</td>
-      <td>[Negative]</td>
-      <td>[Zika virus ZIKV/H. sapiens/FrenchPolynesia/10...</td>
+      <td>IEDB_EPITOPE:9979</td>
+      <td>DRGWGNGC</td>
+      <td>[{'accession': 'ABX25775.1', 'name': 'envelope...</td>
+      <td>[1267825, 1267826, 1267827, 1267828]</td>
+      <td>[Negative, Positive]</td>
+      <td>[Dengue virus 2 Jamaica/1409/1983 (Dengue viru...</td>
       <td>[NCBITaxon:1, NCBITaxon:10239, NCBITaxon:11050...</td>
     </tr>
   </tbody>
@@ -13926,9 +13930,615 @@ Done!
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>OK now we have 16,809 epitopes, which should include all of the Dengue epitopes.</p>
+<h2 id="Limiting-the-results-to-T-cell-epitopes">Limiting the results to T cell epitopes<a class="anchor-link" href="#Limiting-the-results-to-T-cell-epitopes">&#182;</a></h2><p>What if we want to limit the output to peptides that were positive in at least one T cell assay (i.e., T cell epitopes).  We can perform essentiallly the same search against the <strong>tcell_search</strong> table, restricting it only to assays that do not have 'Negative' as their qualitative value.</p>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_params</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;source_organism_iri_search&#39;</span><span class="p">:</span> <span class="s1">&#39;cs.{&quot;NCBITaxon:11051&quot;}&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;select&#39;</span><span class="p">:</span> <span class="s1">&#39;tcell_iri,structure_iri,linear_sequence,curated_source_antigen,qualitative_measure,assay_names,source_organism_name,source_organism_name&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;qualitative_measure&#39;</span><span class="p">:</span> <span class="s1">&#39;not.eq.Negative&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;tcell_iri&#39;</span>
+              <span class="p">}</span>
+<span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;tcell_search&#39;</span>
+<span class="n">full_url</span><span class="o">=</span><span class="n">base_uri</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">table_name</span>
+
+<span class="c1"># get the first 10K results and load them into a data frame</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">)</span>
+<span class="n">df_tcell</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+
+<span class="k">while</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="o">!=</span> <span class="p">[]:</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10000</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;offset: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">)</span>
+    <span class="n">df_tcell</span> <span class="o">=</span> <span class="n">df_tcell</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
+
+<span class="n">df_tcell</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>offset: 10000
+offset: 20000
+Done!
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[10]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tcell_iri</th>
+      <th>structure_iri</th>
+      <th>linear_sequence</th>
+      <th>qualitative_measure</th>
+      <th>assay_names</th>
+      <th>source_organism_name</th>
+      <th>curated_source_antigen.accession</th>
+      <th>curated_source_antigen.name</th>
+      <th>curated_source_antigen.iri</th>
+      <th>curated_source_antigen.starting_position</th>
+      <th>curated_source_antigen.ending_position</th>
+      <th>curated_source_antigen.source_organism_name</th>
+      <th>curated_source_antigen.source_organism_iri</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>IEDB_ASSAY:10011</td>
+      <td>IEDB_EPITOPE:53867</td>
+      <td>RGFRKEIGRMLNILNRRRS</td>
+      <td>Positive</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>SRC265914</td>
+      <td>Genome polyprotein</td>
+      <td>ONTIE:0002377</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>NCBITaxon:31634</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>IEDB_ASSAY:10014</td>
+      <td>IEDB_EPITOPE:31511</td>
+      <td>KKDQVVVLGSQEGAM</td>
+      <td>Positive</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>SRC265914</td>
+      <td>Genome polyprotein</td>
+      <td>ONTIE:0002377</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>NCBITaxon:31634</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>IEDB_ASSAY:10031</td>
+      <td>IEDB_EPITOPE:7384</td>
+      <td>CYHASVTDI</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Japanese encephalitis virus strain Nakayama (J...</td>
+      <td>AAK31640.1</td>
+      <td>envelope protein</td>
+      <td>GENPEPT:AAK31640.1</td>
+      <td>60.0</td>
+      <td>68.0</td>
+      <td>Japanese encephalitis virus strain Nakayama (J...</td>
+      <td>NCBITaxon:11076</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>IEDB_ASSAY:10032</td>
+      <td>IEDB_EPITOPE:7384</td>
+      <td>CYHASVTDI</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Japanese encephalitis virus strain Nakayama (J...</td>
+      <td>AAK31640.1</td>
+      <td>envelope protein</td>
+      <td>GENPEPT:AAK31640.1</td>
+      <td>60.0</td>
+      <td>68.0</td>
+      <td>Japanese encephalitis virus strain Nakayama (J...</td>
+      <td>NCBITaxon:11076</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>IEDB_ASSAY:10143</td>
+      <td>IEDB_EPITOPE:3124</td>
+      <td>AMKGLPIRY</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Dengue virus type 3 CH53489</td>
+      <td>P27915.1</td>
+      <td>Genome polyprotein</td>
+      <td>GENPEPT:P27915.1</td>
+      <td>1708.0</td>
+      <td>1716.0</td>
+      <td>Dengue virus type 3 CH53489</td>
+      <td>ONTIE:0000351</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>212</th>
+      <td>IEDB_ASSAY:9559</td>
+      <td>IEDB_EPITOPE:62183</td>
+      <td>SVKKDLISY</td>
+      <td>Positive</td>
+      <td>proliferation|3H-thymidine</td>
+      <td>Dengue virus 3 (Dengue virus serotype 3)</td>
+      <td>YP_001531172.2</td>
+      <td>Nonstructural protein NS3</td>
+      <td>GENPEPT:YP_001531172.2</td>
+      <td>71.0</td>
+      <td>79.0</td>
+      <td>Dengue virus 3 (Dengue virus serotype 3)</td>
+      <td>NCBITaxon:11069</td>
+    </tr>
+    <tr>
+      <th>213</th>
+      <td>IEDB_ASSAY:9620</td>
+      <td>IEDB_EPITOPE:7995</td>
+      <td>DEGEGRVI</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Murray valley encephalitis virus (strain MVE-1...</td>
+      <td>NP_722535.1</td>
+      <td>NS3</td>
+      <td>GENPEPT:NP_722535.1</td>
+      <td>436.0</td>
+      <td>443.0</td>
+      <td>Murray valley encephalitis virus (strain MVE-1...</td>
+      <td>NCBITaxon:301478</td>
+    </tr>
+    <tr>
+      <th>214</th>
+      <td>IEDB_ASSAY:9621</td>
+      <td>IEDB_EPITOPE:53523</td>
+      <td>REHSGNEI</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Murray valley encephalitis virus (strain MVE-1...</td>
+      <td>NP_722535.1</td>
+      <td>NS3</td>
+      <td>GENPEPT:NP_722535.1</td>
+      <td>250.0</td>
+      <td>257.0</td>
+      <td>Murray valley encephalitis virus (strain MVE-1...</td>
+      <td>NCBITaxon:301478</td>
+    </tr>
+    <tr>
+      <th>215</th>
+      <td>IEDB_ASSAY:9921</td>
+      <td>IEDB_EPITOPE:27061</td>
+      <td>ILGDTAWDFG</td>
+      <td>Positive</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>ABU89742.1</td>
+      <td>envelope glycoprotein</td>
+      <td>GENPEPT:ABU89742.1</td>
+      <td>96.0</td>
+      <td>105.0</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>NCBITaxon:31634</td>
+    </tr>
+    <tr>
+      <th>216</th>
+      <td>IEDB_ASSAY:9922</td>
+      <td>IEDB_EPITOPE:27770</td>
+      <td>INYADRRWCF</td>
+      <td>Positive</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>NP_739587.2</td>
+      <td>Nonstructural protein NS3</td>
+      <td>GENPEPT:NP_739587.2</td>
+      <td>555.0</td>
+      <td>564.0</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>NCBITaxon:31634</td>
+    </tr>
+  </tbody>
+</table>
+<p>10217 rows × 13 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>10,217 positive T cell assays for Flavivirus.  That matches the web results for the IEDB as of August 27, 2021.  Note, however, that since we queried against the T cell table, the rows are unique by assay rather than epitope. So we will need to extract the unique epitopes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_tcell</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;linear_sequence&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[11]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tcell_iri</th>
+      <th>structure_iri</th>
+      <th>linear_sequence</th>
+      <th>qualitative_measure</th>
+      <th>assay_names</th>
+      <th>source_organism_name</th>
+      <th>curated_source_antigen.accession</th>
+      <th>curated_source_antigen.name</th>
+      <th>curated_source_antigen.iri</th>
+      <th>curated_source_antigen.starting_position</th>
+      <th>curated_source_antigen.ending_position</th>
+      <th>curated_source_antigen.source_organism_name</th>
+      <th>curated_source_antigen.source_organism_iri</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>IEDB_ASSAY:10011</td>
+      <td>IEDB_EPITOPE:53867</td>
+      <td>RGFRKEIGRMLNILNRRRS</td>
+      <td>Positive</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>SRC265914</td>
+      <td>Genome polyprotein</td>
+      <td>ONTIE:0002377</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>NCBITaxon:31634</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>IEDB_ASSAY:10014</td>
+      <td>IEDB_EPITOPE:31511</td>
+      <td>KKDQVVVLGSQEGAM</td>
+      <td>Positive</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>SRC265914</td>
+      <td>Genome polyprotein</td>
+      <td>ONTIE:0002377</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Dengue virus 2 Thailand/16681/84 (Dengue virus...</td>
+      <td>NCBITaxon:31634</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>IEDB_ASSAY:10031</td>
+      <td>IEDB_EPITOPE:7384</td>
+      <td>CYHASVTDI</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Japanese encephalitis virus strain Nakayama (J...</td>
+      <td>AAK31640.1</td>
+      <td>envelope protein</td>
+      <td>GENPEPT:AAK31640.1</td>
+      <td>60.0</td>
+      <td>68.0</td>
+      <td>Japanese encephalitis virus strain Nakayama (J...</td>
+      <td>NCBITaxon:11076</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>IEDB_ASSAY:10143</td>
+      <td>IEDB_EPITOPE:3124</td>
+      <td>AMKGLPIRY</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Dengue virus type 3 CH53489</td>
+      <td>P27915.1</td>
+      <td>Genome polyprotein</td>
+      <td>GENPEPT:P27915.1</td>
+      <td>1708.0</td>
+      <td>1716.0</td>
+      <td>Dengue virus type 3 CH53489</td>
+      <td>ONTIE:0000351</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>IEDB_ASSAY:10145</td>
+      <td>IEDB_EPITOPE:2859</td>
+      <td>ALRGLPIRY</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Dengue virus 2 Thailand/NGS-C/1944 (Dengue vir...</td>
+      <td>NP_739587.1</td>
+      <td>NS3 protein</td>
+      <td>GENPEPT:NP_739587.1</td>
+      <td>234.0</td>
+      <td>242.0</td>
+      <td>Dengue virus 2 Thailand/NGS-C/1944 (Dengue vir...</td>
+      <td>NCBITaxon:11065</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>157</th>
+      <td>IEDB_ASSAY:7685168</td>
+      <td>IEDB_EPITOPE:1066541</td>
+      <td>ACLAKSYAQMWLLLY</td>
+      <td>Positive-Low</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>West Nile virus</td>
+      <td>Q8JU42</td>
+      <td>Polyprotein</td>
+      <td>GENPEPT:Q8JU42</td>
+      <td>3285.0</td>
+      <td>3299.0</td>
+      <td>West Nile virus</td>
+      <td>NCBITaxon:11082</td>
+    </tr>
+    <tr>
+      <th>160</th>
+      <td>IEDB_ASSAY:7685171</td>
+      <td>IEDB_EPITOPE:1067634</td>
+      <td>LKRGMPRVLSLIGLK</td>
+      <td>Positive-Low</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>West Nile virus</td>
+      <td>Q9Q6P4</td>
+      <td>Polyprotein</td>
+      <td>GENPEPT:Q9Q6P4</td>
+      <td>17.0</td>
+      <td>31.0</td>
+      <td>West Nile virus</td>
+      <td>NCBITaxon:11082</td>
+    </tr>
+    <tr>
+      <th>190</th>
+      <td>IEDB_ASSAY:8025</td>
+      <td>IEDB_EPITOPE:19434</td>
+      <td>GESRKTFVE</td>
+      <td>Positive</td>
+      <td>cytotoxicity|51 chromium</td>
+      <td>Dengue virus 3 (Dengue virus serotype 3)</td>
+      <td>P27915.1</td>
+      <td>Genome polyprotein</td>
+      <td>GENPEPT:P27915.1</td>
+      <td>2001.0</td>
+      <td>2009.0</td>
+      <td>Dengue virus 3 (Dengue virus serotype 3)</td>
+      <td>NCBITaxon:11069</td>
+    </tr>
+    <tr>
+      <th>196</th>
+      <td>IEDB_ASSAY:8271173</td>
+      <td>IEDB_EPITOPE:230626</td>
+      <td>AMTDTTPFGQQRVFK</td>
+      <td>Positive</td>
+      <td>IFNg release|ELISPOT</td>
+      <td>Dengue virus</td>
+      <td>AQV12160.1</td>
+      <td>polyprotein [Dengue virus]</td>
+      <td>GENPEPT:1151123640</td>
+      <td>2834.0</td>
+      <td>2848.0</td>
+      <td>Dengue virus</td>
+      <td>NCBITaxon:12637</td>
+    </tr>
+    <tr>
+      <th>199</th>
+      <td>IEDB_ASSAY:8339</td>
+      <td>IEDB_EPITOPE:40314</td>
+      <td>LVEFEPPHAATIRVL</td>
+      <td>Positive</td>
+      <td>IFNg release|ICS</td>
+      <td>Yellow fever virus 17D (Yellow fever virus (ST...</td>
+      <td>AAR86693.1</td>
+      <td>envelope protein</td>
+      <td>GENPEPT:AAR86693.1</td>
+      <td>231.0</td>
+      <td>245.0</td>
+      <td>Yellow fever virus 17D (Yellow fever virus (ST...</td>
+      <td>NCBITaxon:11090</td>
+    </tr>
+  </tbody>
+</table>
+<p>4927 rows × 13 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>4,927 sequences from Flavivirus that were positive in at least 1 T cell assay, which matches the current data in the IEDB.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="An-alternative-approach-using-resource-embeddings">An alternative approach using resource embeddings<a class="anchor-link" href="#An-alternative-approach-using-resource-embeddings">&#182;</a></h3><p><strong>NOTE:</strong>  This example has not been fully vetted and takes a <em>very</em> long time to run, likely due to inefficient joins.  It will be further worked out in the future.</p>
+<p>We can also make use of <a href="https://postgrest.org/en/stable/api.html#resource-embedding">resource embeddings</a> to get at this same information.  Here, we start with the epitope_search table, limit it to those with tcell_ids, then join it to the tcell_search table where the qualitative value is not 'Negative'.  Since results are returned for ALL epitope records with T cell assays, they need to be further processed to remove the epitopes without associated 'positive' T cell records.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_params</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;source_organism_iri_search&#39;</span><span class="p">:</span> <span class="s1">&#39;cs.{&quot;NCBITaxon:11051&quot;}&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;tcell_ids&#39;</span><span class="p">:</span> <span class="s1">&#39;not.is.null&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;tcell_search.qualitative_measure&#39;</span><span class="p">:</span> <span class="s1">&#39;not.eq.Negative&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;select&#39;</span><span class="p">:</span> <span class="s1">&#39;structure_id,tcell_ids,tcell_search(tcell_iri,qualitative_measure)&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;offset&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;structure_id&#39;</span>
+              <span class="p">}</span>
+<span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;epitope_search&#39;</span>
+<span class="n">full_url</span><span class="o">=</span><span class="n">base_uri</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">table_name</span>
+
+<span class="c1"># get the first 10K results and load them into a data frame</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">)</span>
+<span class="n">df_tcell_from_epitope</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+
+<span class="k">while</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="o">!=</span> <span class="p">[]:</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10000</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;offset: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">)</span>
+    <span class="n">df_tcell_from_epitope</span> <span class="o">=</span> <span class="n">df_tcell_from_epitope</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
+
+<span class="n">df_tcell_from_epitope</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we filter out all of the rows where no corresponding, positive T cell assays were found.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_tcell_from_epitope</span><span class="p">[</span><span class="n">df_tcell_from_epitope</span><span class="p">[</span><span class="s1">&#39;tcell_search&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
     </div>
   </div>
