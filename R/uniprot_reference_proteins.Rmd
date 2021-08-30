@@ -49,13 +49,15 @@ params <- list()
 params[['parent_source_antigen_iri']] = 'like.UNIPROT*'
 params[['select']] = 'parent_source_antigen_id,parent_source_antigen_iri,parent_source_antigen_source_org_iri,parent_source_antigen_name'
 params[['offset']] = 0
+params[['order']] = 'parent_source_antigen_id'
 ```
 
 Since I know there will be more than 10K records, we will need to fetch 1 page at a time
-and continue to append them onto our tibble.  To be good citizens, we would add a short 'sleep' in
-between calls to the API.
+and continue to append them onto our tibble.  **NOTE:** When paging through results by using an 'offset', it is critical to add an 'order' parameter to ensure that the pages are consistent between queries.
+
+To be good citizens, we also add a short 'sleep' in between calls to the API.
 ```{r}
-# initialize 'get_text' so we can page throuth the results
+# initialize 'get_text' so we can page through the results
 get_text <- 'NA'
 full_tbl <- tibble()
 while(get_text != '[]') {
