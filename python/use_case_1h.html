@@ -14909,18 +14909,1158 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Querying-for-MHC-ligand-assays-instead">Querying for MHC ligand assays instead<a class="anchor-link" href="#Querying-for-MHC-ligand-assays-instead">&#182;</a></h2><p>If we want to run the same search, but for MHC ligand assays instead, all that we need to do is to change the table that we search against from 'tcell_search' to 'mhc_search':</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_params</span><span class="o">=</span><span class="p">{</span> <span class="s1">&#39;structure_type&#39;</span><span class="p">:</span> <span class="s1">&#39;eq.Linear peptide&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;mhc_allele_name&#39;</span><span class="p">:</span> <span class="s1">&#39;eq.HLA-A*02:01&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;host_organism_iri&#39;</span><span class="p">:</span> <span class="s1">&#39;eq.NCBITaxon:9606&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;source_organism_iri&#39;</span><span class="p">:</span> <span class="s1">&#39;eq.NCBITaxon:9606&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;disease_names&#39;</span><span class="p">:</span> <span class="s1">&#39;cs.</span><span class="si">{healthy}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;order&#39;</span><span class="p">:</span> <span class="s1">&#39;structure_iri&#39;</span><span class="p">,</span>
+              <span class="p">}</span>
+<span class="n">table_name</span><span class="o">=</span><span class="s1">&#39;mhc_search&#39;</span>
+<span class="n">full_url</span><span class="o">=</span><span class="n">base_uri</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">table_name</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">)</span>
+<span class="n">print_curl_cmd</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </pre></div>
 
     </div>
 </div>
 </div>
 
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>curl -X &#39;GET&#39; &#39;https://query-api.iedb.org/mhc_search?structure_type=eq.Linear+peptide&amp;mhc_allele_name=eq.HLA-A%2A02%3A01&amp;host_organism_iri=eq.NCBITaxon%3A9606&amp;source_organism_iri=eq.NCBITaxon%3A9606&amp;disease_names=cs.%7Bhealthy%7D&amp;order=structure_iri&#39;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's take a look:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[7]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>elution_id</th>
+      <th>elution_iri</th>
+      <th>structure_id</th>
+      <th>structure_iri</th>
+      <th>linear_sequence</th>
+      <th>structure_type</th>
+      <th>structure_description</th>
+      <th>reference_id</th>
+      <th>reference_iri</th>
+      <th>reference_type</th>
+      <th>...</th>
+      <th>r_object_source_organism_iri</th>
+      <th>r_object_source_organism_name</th>
+      <th>e_related_object_type</th>
+      <th>curated_source_antigen.accession</th>
+      <th>curated_source_antigen.name</th>
+      <th>curated_source_antigen.iri</th>
+      <th>curated_source_antigen.starting_position</th>
+      <th>curated_source_antigen.ending_position</th>
+      <th>curated_source_antigen.source_organism_name</th>
+      <th>curated_source_antigen.source_organism_iri</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7335335</td>
+      <td>IEDB_ASSAY:7335335</td>
+      <td>1000098</td>
+      <td>IEDB_EPITOPE:1000098</td>
+      <td>ALAATVFCV</td>
+      <td>Linear peptide</td>
+      <td>ALAATVFCV + CYSTL(C8)</td>
+      <td>1036600</td>
+      <td>IEDB_REFERENCE:1036600</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q14739.2</td>
+      <td>Lamin-B receptor</td>
+      <td>UNIPROT:Q14739.2</td>
+      <td>330.0</td>
+      <td>338.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>12414943</td>
+      <td>IEDB_ASSAY:12414943</td>
+      <td>1000103</td>
+      <td>IEDB_EPITOPE:1000103</td>
+      <td>ALADKHATL</td>
+      <td>Linear peptide</td>
+      <td>ALADKHATL</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q13330.2</td>
+      <td>Metastasis-associated protein MTA1</td>
+      <td>UNIPROT:Q13330.2</td>
+      <td>57.0</td>
+      <td>65.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>12414966</td>
+      <td>IEDB_ASSAY:12414966</td>
+      <td>1000115</td>
+      <td>IEDB_EPITOPE:1000115</td>
+      <td>ALAEMLKENKV</td>
+      <td>Linear peptide</td>
+      <td>ALAEMLKENKV + OX(M5)</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P28289.1</td>
+      <td>Tropomodulin-1</td>
+      <td>UNIPROT:P28289.1</td>
+      <td>243.0</td>
+      <td>253.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>12414977</td>
+      <td>IEDB_ASSAY:12414977</td>
+      <td>1000134</td>
+      <td>IEDB_EPITOPE:1000134</td>
+      <td>ALAHEKFTKEL</td>
+      <td>Linear peptide</td>
+      <td>ALAHEKFTKEL</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q8IY22.3</td>
+      <td>C-Maf-inducing protein</td>
+      <td>UNIPROT:Q8IY22.3</td>
+      <td>486.0</td>
+      <td>496.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>12414979</td>
+      <td>IEDB_ASSAY:12414979</td>
+      <td>1000138</td>
+      <td>IEDB_EPITOPE:1000138</td>
+      <td>ALAKAIEKNV</td>
+      <td>Linear peptide</td>
+      <td>ALAKAIEKNV</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P10644.1</td>
+      <td>cAMP-dependent protein kinase type I-alpha reg...</td>
+      <td>UNIPROT:P10644.1</td>
+      <td>127.0</td>
+      <td>136.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>9995</th>
+      <td>9184167</td>
+      <td>IEDB_ASSAY:9184167</td>
+      <td>445835</td>
+      <td>IEDB_EPITOPE:445835</td>
+      <td>KPTGARPSAL</td>
+      <td>Linear peptide</td>
+      <td>KPTGARPSAL</td>
+      <td>1037260</td>
+      <td>IEDB_REFERENCE:1037260</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>3820978</td>
+      <td>chromosome 6 open reading frame 11 [Homo sapiens]</td>
+      <td>GENPEPT:3820978</td>
+      <td>596.0</td>
+      <td>605.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9996</th>
+      <td>9184168</td>
+      <td>IEDB_ASSAY:9184168</td>
+      <td>445839</td>
+      <td>IEDB_EPITOPE:445839</td>
+      <td>KPTSKDQVL</td>
+      <td>Linear peptide</td>
+      <td>KPTSKDQVL</td>
+      <td>1037260</td>
+      <td>IEDB_REFERENCE:1037260</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>929653799</td>
+      <td>KIAA0097 protein [Homo sapiens]</td>
+      <td>GENPEPT:929653799</td>
+      <td>1062.0</td>
+      <td>1070.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9997</th>
+      <td>9184169</td>
+      <td>IEDB_ASSAY:9184169</td>
+      <td>445843</td>
+      <td>IEDB_EPITOPE:445843</td>
+      <td>KPVKPHSSF</td>
+      <td>Linear peptide</td>
+      <td>KPVKPHSSF</td>
+      <td>1037260</td>
+      <td>IEDB_REFERENCE:1037260</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>28629137</td>
+      <td>HBxAg transactivated protein 2 [Homo sapiens]</td>
+      <td>GENPEPT:28629137</td>
+      <td>1297.0</td>
+      <td>1305.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9998</th>
+      <td>9184170</td>
+      <td>IEDB_ASSAY:9184170</td>
+      <td>445844</td>
+      <td>IEDB_EPITOPE:445844</td>
+      <td>KPVNPSPLSQL</td>
+      <td>Linear peptide</td>
+      <td>KPVNPSPLSQL</td>
+      <td>1037260</td>
+      <td>IEDB_REFERENCE:1037260</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>49456499</td>
+      <td>PTE1 [Homo sapiens]</td>
+      <td>GENPEPT:49456499</td>
+      <td>188.0</td>
+      <td>198.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9999</th>
+      <td>9184172</td>
+      <td>IEDB_ASSAY:9184172</td>
+      <td>445846</td>
+      <td>IEDB_EPITOPE:445846</td>
+      <td>KPVSSNNSL</td>
+      <td>Linear peptide</td>
+      <td>KPVSSNNSL</td>
+      <td>1037260</td>
+      <td>IEDB_REFERENCE:1037260</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>3043668</td>
+      <td>KIAA0572 protein, partial [Homo sapiens]</td>
+      <td>GENPEPT:3043668</td>
+      <td>103.0</td>
+      <td>111.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+  </tbody>
+</table>
+<p>10000 rows × 89 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>OK, exacatly 10,000 records should raise susicion as it indicates the results are paged.  We'll need to retrieve the full dataset.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="o">!=</span> <span class="p">[]:</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">10000</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;offset: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">search_params</span><span class="p">[</span><span class="s1">&#39;offset&#39;</span><span class="p">]))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">search_params</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">json_normalize</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">json</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Done!&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>offset: 10000
+offset: 20000
+Done!
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's take another look:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[9]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>elution_id</th>
+      <th>elution_iri</th>
+      <th>structure_id</th>
+      <th>structure_iri</th>
+      <th>linear_sequence</th>
+      <th>structure_type</th>
+      <th>structure_description</th>
+      <th>reference_id</th>
+      <th>reference_iri</th>
+      <th>reference_type</th>
+      <th>...</th>
+      <th>r_object_source_organism_iri</th>
+      <th>r_object_source_organism_name</th>
+      <th>e_related_object_type</th>
+      <th>curated_source_antigen.accession</th>
+      <th>curated_source_antigen.name</th>
+      <th>curated_source_antigen.iri</th>
+      <th>curated_source_antigen.starting_position</th>
+      <th>curated_source_antigen.ending_position</th>
+      <th>curated_source_antigen.source_organism_name</th>
+      <th>curated_source_antigen.source_organism_iri</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7335335</td>
+      <td>IEDB_ASSAY:7335335</td>
+      <td>1000098</td>
+      <td>IEDB_EPITOPE:1000098</td>
+      <td>ALAATVFCV</td>
+      <td>Linear peptide</td>
+      <td>ALAATVFCV + CYSTL(C8)</td>
+      <td>1036600</td>
+      <td>IEDB_REFERENCE:1036600</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q14739.2</td>
+      <td>Lamin-B receptor</td>
+      <td>UNIPROT:Q14739.2</td>
+      <td>330.0</td>
+      <td>338.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>12414943</td>
+      <td>IEDB_ASSAY:12414943</td>
+      <td>1000103</td>
+      <td>IEDB_EPITOPE:1000103</td>
+      <td>ALADKHATL</td>
+      <td>Linear peptide</td>
+      <td>ALADKHATL</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q13330.2</td>
+      <td>Metastasis-associated protein MTA1</td>
+      <td>UNIPROT:Q13330.2</td>
+      <td>57.0</td>
+      <td>65.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>12414966</td>
+      <td>IEDB_ASSAY:12414966</td>
+      <td>1000115</td>
+      <td>IEDB_EPITOPE:1000115</td>
+      <td>ALAEMLKENKV</td>
+      <td>Linear peptide</td>
+      <td>ALAEMLKENKV + OX(M5)</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P28289.1</td>
+      <td>Tropomodulin-1</td>
+      <td>UNIPROT:P28289.1</td>
+      <td>243.0</td>
+      <td>253.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>12414977</td>
+      <td>IEDB_ASSAY:12414977</td>
+      <td>1000134</td>
+      <td>IEDB_EPITOPE:1000134</td>
+      <td>ALAHEKFTKEL</td>
+      <td>Linear peptide</td>
+      <td>ALAHEKFTKEL</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q8IY22.3</td>
+      <td>C-Maf-inducing protein</td>
+      <td>UNIPROT:Q8IY22.3</td>
+      <td>486.0</td>
+      <td>496.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>12414979</td>
+      <td>IEDB_ASSAY:12414979</td>
+      <td>1000138</td>
+      <td>IEDB_EPITOPE:1000138</td>
+      <td>ALAKAIEKNV</td>
+      <td>Linear peptide</td>
+      <td>ALAKAIEKNV</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P10644.1</td>
+      <td>cAMP-dependent protein kinase type I-alpha reg...</td>
+      <td>UNIPROT:P10644.1</td>
+      <td>127.0</td>
+      <td>136.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>9117</th>
+      <td>12414854</td>
+      <td>IEDB_ASSAY:12414854</td>
+      <td>999308</td>
+      <td>IEDB_EPITOPE:999308</td>
+      <td>AFMSQVHSV</td>
+      <td>Linear peptide</td>
+      <td>AFMSQVHSV + OX(M3)</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q8IV04.1</td>
+      <td>Carabin</td>
+      <td>UNIPROT:Q8IV04.1</td>
+      <td>327.0</td>
+      <td>335.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9118</th>
+      <td>7335232</td>
+      <td>IEDB_ASSAY:7335232</td>
+      <td>999659</td>
+      <td>IEDB_EPITOPE:999659</td>
+      <td>AIAPCEVTVPA</td>
+      <td>Linear peptide</td>
+      <td>AIAPCEVTVPA + CYSTL(C5)</td>
+      <td>1036600</td>
+      <td>IEDB_REFERENCE:1036600</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P05388.1</td>
+      <td>60S acidic ribosomal protein P0</td>
+      <td>UNIPROT:P05388.1</td>
+      <td>115.0</td>
+      <td>125.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9119</th>
+      <td>12414874</td>
+      <td>IEDB_ASSAY:12414874</td>
+      <td>999690</td>
+      <td>IEDB_EPITOPE:999690</td>
+      <td>AIDVVPPNV</td>
+      <td>Linear peptide</td>
+      <td>AIDVVPPNV</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>O15519.1</td>
+      <td>CASP8 and FADD-like apoptosis regulator</td>
+      <td>UNIPROT:O15519.1</td>
+      <td>29.0</td>
+      <td>37.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9120</th>
+      <td>12414887</td>
+      <td>IEDB_ASSAY:12414887</td>
+      <td>999767</td>
+      <td>IEDB_EPITOPE:999767</td>
+      <td>AILGKLYKI</td>
+      <td>Linear peptide</td>
+      <td>AILGKLYKI</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q8NEZ4.3</td>
+      <td>Histone-lysine N-methyltransferase 2C</td>
+      <td>UNIPROT:Q8NEZ4.3</td>
+      <td>1504.0</td>
+      <td>1512.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9121</th>
+      <td>7335300</td>
+      <td>IEDB_ASSAY:7335300</td>
+      <td>999783</td>
+      <td>IEDB_EPITOPE:999783</td>
+      <td>AIMGFIGFFV</td>
+      <td>Linear peptide</td>
+      <td>AIMGFIGFFV + OX(M3)</td>
+      <td>1036600</td>
+      <td>IEDB_REFERENCE:1036600</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P60059.1</td>
+      <td>Protein transport protein Sec61 subunit gamma</td>
+      <td>UNIPROT:P60059.1</td>
+      <td>45.0</td>
+      <td>54.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+  </tbody>
+</table>
+<p>19122 rows × 89 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Awesome, 19,122 matches the query results on the website for this search as of Nov 2, 2021.  So now it's just a matter of extracting the unique epitopes from this list.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;structure_iri&#39;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[10]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>elution_id</th>
+      <th>elution_iri</th>
+      <th>structure_id</th>
+      <th>structure_iri</th>
+      <th>linear_sequence</th>
+      <th>structure_type</th>
+      <th>structure_description</th>
+      <th>reference_id</th>
+      <th>reference_iri</th>
+      <th>reference_type</th>
+      <th>...</th>
+      <th>r_object_source_organism_iri</th>
+      <th>r_object_source_organism_name</th>
+      <th>e_related_object_type</th>
+      <th>curated_source_antigen.accession</th>
+      <th>curated_source_antigen.name</th>
+      <th>curated_source_antigen.iri</th>
+      <th>curated_source_antigen.starting_position</th>
+      <th>curated_source_antigen.ending_position</th>
+      <th>curated_source_antigen.source_organism_name</th>
+      <th>curated_source_antigen.source_organism_iri</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7335335</td>
+      <td>IEDB_ASSAY:7335335</td>
+      <td>1000098</td>
+      <td>IEDB_EPITOPE:1000098</td>
+      <td>ALAATVFCV</td>
+      <td>Linear peptide</td>
+      <td>ALAATVFCV + CYSTL(C8)</td>
+      <td>1036600</td>
+      <td>IEDB_REFERENCE:1036600</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q14739.2</td>
+      <td>Lamin-B receptor</td>
+      <td>UNIPROT:Q14739.2</td>
+      <td>330.0</td>
+      <td>338.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>12414943</td>
+      <td>IEDB_ASSAY:12414943</td>
+      <td>1000103</td>
+      <td>IEDB_EPITOPE:1000103</td>
+      <td>ALADKHATL</td>
+      <td>Linear peptide</td>
+      <td>ALADKHATL</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q13330.2</td>
+      <td>Metastasis-associated protein MTA1</td>
+      <td>UNIPROT:Q13330.2</td>
+      <td>57.0</td>
+      <td>65.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>12414966</td>
+      <td>IEDB_ASSAY:12414966</td>
+      <td>1000115</td>
+      <td>IEDB_EPITOPE:1000115</td>
+      <td>ALAEMLKENKV</td>
+      <td>Linear peptide</td>
+      <td>ALAEMLKENKV + OX(M5)</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P28289.1</td>
+      <td>Tropomodulin-1</td>
+      <td>UNIPROT:P28289.1</td>
+      <td>243.0</td>
+      <td>253.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>12414977</td>
+      <td>IEDB_ASSAY:12414977</td>
+      <td>1000134</td>
+      <td>IEDB_EPITOPE:1000134</td>
+      <td>ALAHEKFTKEL</td>
+      <td>Linear peptide</td>
+      <td>ALAHEKFTKEL</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q8IY22.3</td>
+      <td>C-Maf-inducing protein</td>
+      <td>UNIPROT:Q8IY22.3</td>
+      <td>486.0</td>
+      <td>496.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>12414979</td>
+      <td>IEDB_ASSAY:12414979</td>
+      <td>1000138</td>
+      <td>IEDB_EPITOPE:1000138</td>
+      <td>ALAKAIEKNV</td>
+      <td>Linear peptide</td>
+      <td>ALAKAIEKNV</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P10644.1</td>
+      <td>cAMP-dependent protein kinase type I-alpha reg...</td>
+      <td>UNIPROT:P10644.1</td>
+      <td>127.0</td>
+      <td>136.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>9117</th>
+      <td>12414854</td>
+      <td>IEDB_ASSAY:12414854</td>
+      <td>999308</td>
+      <td>IEDB_EPITOPE:999308</td>
+      <td>AFMSQVHSV</td>
+      <td>Linear peptide</td>
+      <td>AFMSQVHSV + OX(M3)</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q8IV04.1</td>
+      <td>Carabin</td>
+      <td>UNIPROT:Q8IV04.1</td>
+      <td>327.0</td>
+      <td>335.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9118</th>
+      <td>7335232</td>
+      <td>IEDB_ASSAY:7335232</td>
+      <td>999659</td>
+      <td>IEDB_EPITOPE:999659</td>
+      <td>AIAPCEVTVPA</td>
+      <td>Linear peptide</td>
+      <td>AIAPCEVTVPA + CYSTL(C5)</td>
+      <td>1036600</td>
+      <td>IEDB_REFERENCE:1036600</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P05388.1</td>
+      <td>60S acidic ribosomal protein P0</td>
+      <td>UNIPROT:P05388.1</td>
+      <td>115.0</td>
+      <td>125.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9119</th>
+      <td>12414874</td>
+      <td>IEDB_ASSAY:12414874</td>
+      <td>999690</td>
+      <td>IEDB_EPITOPE:999690</td>
+      <td>AIDVVPPNV</td>
+      <td>Linear peptide</td>
+      <td>AIDVVPPNV</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>O15519.1</td>
+      <td>CASP8 and FADD-like apoptosis regulator</td>
+      <td>UNIPROT:O15519.1</td>
+      <td>29.0</td>
+      <td>37.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9120</th>
+      <td>12414887</td>
+      <td>IEDB_ASSAY:12414887</td>
+      <td>999767</td>
+      <td>IEDB_EPITOPE:999767</td>
+      <td>AILGKLYKI</td>
+      <td>Linear peptide</td>
+      <td>AILGKLYKI</td>
+      <td>1037821</td>
+      <td>IEDB_REFERENCE:1037821</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>Q8NEZ4.3</td>
+      <td>Histone-lysine N-methyltransferase 2C</td>
+      <td>UNIPROT:Q8NEZ4.3</td>
+      <td>1504.0</td>
+      <td>1512.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+    <tr>
+      <th>9121</th>
+      <td>7335300</td>
+      <td>IEDB_ASSAY:7335300</td>
+      <td>999783</td>
+      <td>IEDB_EPITOPE:999783</td>
+      <td>AIMGFIGFFV</td>
+      <td>Linear peptide</td>
+      <td>AIMGFIGFFV + OX(M3)</td>
+      <td>1036600</td>
+      <td>IEDB_REFERENCE:1036600</td>
+      <td>Literature</td>
+      <td>...</td>
+      <td>None</td>
+      <td>None</td>
+      <td>None</td>
+      <td>P60059.1</td>
+      <td>Protein transport protein Sec61 subunit gamma</td>
+      <td>UNIPROT:P60059.1</td>
+      <td>45.0</td>
+      <td>54.0</td>
+      <td>Homo sapiens (human)</td>
+      <td>NCBITaxon:9606</td>
+    </tr>
+  </tbody>
+</table>
+<p>15076 rows × 89 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>15,076 matches the number of epitopes on the website as of Nov 2, 2021.  The same caveats apply here as to the duplicate removal above (i.e., we've lost some information about the assays as we have only kept 1 matching assay for each epitope).  Also note that we haven't applied any filters for assays that were 'positive' or 'negative', so the structures that are returned will be a mixed bag.</p>
+
+</div>
+</div>
 </div>
     </div>
   </div>
