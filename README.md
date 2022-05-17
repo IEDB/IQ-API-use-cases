@@ -1,3 +1,13 @@
+# Feature request: enable GitHub Issues
+
+Dear `IQ-API-use-cases` maintainer,
+
+I would like to request that the GitHub 'Issues' tab would be enabled/activated/visible again, so users can reach out with questions, bug reports and such.
+
+Would be great!
+
+Thanks and cheers, Richel
+
 # IEDB Query API (IQ-API) use cases
 
 This repository contains several use cases that demonstrate various functionalities of the [IEDB Query API (IQ-API)](https://query-api.iedb.org/docs/swagger).  It is not very thorough or organized, but the hope is that will improve in the future.  Currently, it is divided into use cases worked out in [Python](python) (using Jupyter) and [R](R) (using RMarkdown).  Each use case includes the code (.ipynb files for Python and .Rmd files for R) as well as rendered HTML files.
