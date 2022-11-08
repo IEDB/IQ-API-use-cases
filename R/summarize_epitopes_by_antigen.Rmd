@@ -1,0 +1,251 @@
+---
+title: "Summarize epitopes by antigen"
+author: "Jason Greenbaum"
+date: "11/7/2022"
+params:
+  pubmed_id_file: pubmed_ids.txt
+output: 
+  html_document:
+    code_folding: show
+    df_print: paged
+    toc: true
+    toc_depth: 4
+    theme: united
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning=FALSE, message=FALSE)
+```
+
+# Summarize epitopes by antigen
+
+Given a list of pubmed IDs, use the IQ-API to pull in all antigen and epitope information
+and summarize as follows:
+
+* antigen_id, name, etc.
+* number of reference that report positive epitopes derived from that antigen
+* total num_peptides_positive derived from each antigen (each peptide is counted only once even if it appears in multiple references)
+
+## Setup
+
+First, some housekeeping...
+
+```{r}
+library(httr)
+library(jsonlite)
+library(tidyr)
+library(readr)
+library(dplyr)
+```
+
+Read in the pubmed IDs from a file:
+```{r}
+pubmed_ids <- read_lines(params$pubmed_id_file)
+```
+
+Define the base URI of the IEDB Query API.
+
+```{r}
+base_uri = 'https://query-api.iedb.org/'
+```
+
+
+### Map the pubmed IDs to reference IDs
+
+Let's set the query string parameters
+
+```{r}
+pubmed_id_string<-paste(pubmed_ids, collapse=',')
+query_params <- list()
+query_params[['pubmed_id']] = paste0('in.(', pubmed_id_string,')')
+query_params[['select']] = 'pubmed_id,reference_id'
+query_params[['offset']] = 0
+query_params[['order']] = 'pubmed_id'
+```
+
+Since there may be more than 10K records, we will need to fetch 1 page at a time
+and continue to append them onto our tibble.  **NOTE:** When paging through results by using an 'offset', it is critical to add an 'order' parameter to ensure that the pages are consistent between queries.
+
+To be good citizens, we also add a short 'sleep' in between calls to the API.
+```{r}
+# initialize 'get_text' so we can page through the results
+get_text <- 'NA'
+ref2pmid <- tibble()
+while(get_text != '[]') {
+  url <- paste(base_uri, 'reference_search',sep='')
+  print(paste0("fetching offset: ",query_params[['offset']]))
+  get_1 = GET(url, query=query_params)
+  get_text = content(get_1,'text')
+  resp_tbl <- tibble(fromJSON(get_text))
+  ref2pmid <- rbind(ref2pmid, resp_tbl)
+  query_params[['offset']] = query_params[['offset']] + 10000
+  # sleep for 1 second between calls so as not to overload the server
+  Sys.sleep(1)
+}
+```
+
+Create a reference ID string to incorporate into downstream queries:
+```{r}
+ref_id_string <- paste(ref2pmid$reference_id, collapse=',')
+```
+
+## Fetch the positive T & B cell epitopes
+
+First, set the query parameters:
+
+```{r}
+query_params <- list()
+query_params[['reference_id']] = paste0('in.(', ref_id_string,')')
+query_params[['qualitative_measure']] = 'neq.Negative'
+query_params[['select']] = 'reference_id,parent_source_antigen_iri,structure_id,structure_description'
+query_params[['offset']] = 0
+query_params[['order']] = 'reference_id'
+```
+
+Now run the query against tcell_search
+```{r}
+# initialize 'get_text' so we can page through the results
+get_text <- 'NA'
+tcell_epitopes <- tibble()
+while(get_text != '[]') {
+  url <- paste(base_uri, 'tcell_search',sep='')
+  print(paste0("fetching offset: ",query_params[['offset']]))
+  get_1 = GET(url, query=query_params)
+  get_text = content(get_1,'text')
+  resp_tbl <- tibble(fromJSON(get_text))
+  tcell_epitopes <- rbind(tcell_epitopes, resp_tbl)
+  query_params[['offset']] = query_params[['offset']] + 10000
+  # sleep for 1 second between calls so as not to overload the server
+  Sys.sleep(1)
+}
+```
+
+And then B cell search, after resetting the offset:
+```{r}
+# initialize 'get_text' so we can page through the results
+query_params[['offset']] = 0
+get_text <- 'NA'
+bcell_epitopes <- tibble()
+while(get_text != '[]') {
+  url <- paste(base_uri, 'bcell_search',sep='')
+  print(paste0("fetching offset: ",query_params[['offset']]))
+  get_1 = GET(url, query=query_params)
+  get_text = content(get_1,'text')
+  resp_tbl <- tibble(fromJSON(get_text))
+  bcell_epitopes <- rbind(bcell_epitopes, resp_tbl)
+  query_params[['offset']] = query_params[['offset']] + 10000
+  # sleep for 1 second between calls so as not to overload the server
+  Sys.sleep(1)
+}
+```
+
+**NOTE** There are certain cases when the source antigen is unknown/null.  We'll quantify
+those here, but will ignore those epitopes for the remainder of this analysis.
+
+### Initial summary
+
+Here we summarize the number of T & B cell epitopes retrieved and the number where the source antingen is not null.  We move forward by combining these data.
+
+```{r}
+bcell_epitopes %>% nrow()
+bcell_epitopes %>%
+  filter(!is.na(parent_source_antigen_iri)) %>%
+  nrow()
+```
+
+```{r}
+tcell_epitopes %>% nrow()
+tcell_epitopes %>%
+  filter(!is.na(parent_source_antigen_iri)) %>%
+  nrow()
+```
+
+```{r}
+all_epitopes <- rbind(bcell_epitopes,tcell_epitopes) %>%
+  filter(!is.na(parent_source_antigen_iri))
+```
+
+### References per antigen
+
+Let's get the number of references for each antigen first.
+
+```{r}
+refs_per_antigen <- all_epitopes %>%
+  distinct(reference_id, parent_source_antigen_iri) %>%
+  group_by(parent_source_antigen_iri) %>%
+  summarize(num_references=n())
+
+refs_per_antigen
+```
+
+
+### Peptides per antigen
+
+Now the peptides (including discontinuous sequences) per antigen
+
+```{r}
+peps_per_antigen <- all_epitopes %>%
+  distinct(parent_source_antigen_iri, structure_id, structure_description) %>%
+  group_by(parent_source_antigen_iri) %>%
+  summarize(num_peptides=n())
+
+peps_per_antigen
+```
+
+
+### Source antigen data
+
+Before we put everything together, we need to pull all of the source antigen information.  Since the parent_source_antigen_iri is not yet in the parent_proteins table, we first pull ALL of the parent proteins
+and create the parent_source_antigen_uri later.
+
+```{r}
+query_params <- list()
+query_params[['select']] = 'database,accession,name,title,proteome_label'
+query_params[['offset']] = 0
+query_params[['order']] = 'accession'
+```
+
+Now run the query against tcell_search
+```{r}
+# initialize 'get_text' so we can page through the results
+get_text <- 'NA'
+parent_proteins <- tibble()
+while(get_text != '[]') {
+  url <- paste(base_uri, 'parent_proteins',sep='')
+  print(paste0("fetching offset: ",query_params[['offset']]))
+  get_1 = GET(url, query=query_params)
+  get_text = content(get_1,'text')
+  resp_tbl <- tibble(fromJSON(get_text))
+  parent_proteins <- rbind(parent_proteins, resp_tbl)
+  query_params[['offset']] = query_params[['offset']] + 10000
+  # sleep for 1 second between calls so as not to overload the server
+  Sys.sleep(1)
+}
+
+#let's add a psuedo parent_source_antigen_iri
+parent_proteins <- parent_proteins %>%
+  mutate(parent_source_antigen_iri = paste0(toupper(database),':',toupper(accession)))
+
+```
+
+
+### Final summary
+
+Here, we combine the data into the table of interest
+
+```{r}
+final_summary <-
+  refs_per_antigen %>%
+  left_join(peps_per_antigen,
+            by='parent_source_antigen_iri') %>%
+  left_join(parent_proteins,
+            by='parent_source_antigen_iri')
+
+final_summary %>%
+  select(antigen_id=parent_source_antigen_iri,
+         antigen_title=title,
+         num_references,
+         num_peptides)
+
+```
