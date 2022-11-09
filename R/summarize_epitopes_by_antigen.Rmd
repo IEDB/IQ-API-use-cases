@@ -37,17 +37,54 @@ library(jsonlite)
 library(tidyr)
 library(readr)
 library(dplyr)
+library(DT)
+
+create_dt <- function(x){
+  DT::datatable(x,
+                extensions = 'Buttons',
+                options = list(dom = 'Blfrtip',
+                               buttons = c('copy', 'csv', 'excel', 'pdf', 'print'),
+                               lengthMenu = list(c(10,25,50,-1),
+                                                 c(10,25,50,"All"))))
+}
+
 ```
+Let's define a function for running a query and returning a tibble of results:
+
+```{r}
+
+iq_query <- function(endpoint, query_params, base_uri='https://query-api.iedb.org/') {
+
+  # set the offset to 0
+  query_params[['offset']] <-0
+  
+  # initialize 'get_text' so we can page through the results
+  get_text <- 'NA'
+  final_tbl <- tibble()
+  while(get_text != '[]') {
+    url <- paste(base_uri, endpoint,sep='')
+    print(paste0("fetching offset: ",query_params[['offset']]))
+    #TODO: wrap this in a try block
+    get_1 = GET(url, query=query_params)
+    get_text = content(get_1,'text')
+    resp_tbl <- tibble(fromJSON(get_text))
+    final_tbl <- rbind(final_tbl, resp_tbl)
+    query_params[['offset']] = query_params[['offset']] + 10000
+    # sleep for 1 second between calls so as not to overload the server
+    Sys.sleep(1)
+  }
+
+  # return the final_tbl
+  final_tbl
+
+}
+
+```
+
 
 Read in the pubmed IDs from a file:
 ```{r}
 pubmed_ids <- read_lines(params$pubmed_id_file)
-```
-
-Define the base URI of the IEDB Query API.
-
-```{r}
-base_uri = 'https://query-api.iedb.org/'
 ```
 
 
@@ -60,7 +97,6 @@ pubmed_id_string<-paste(pubmed_ids, collapse=',')
 query_params <- list()
 query_params[['pubmed_id']] = paste0('in.(', pubmed_id_string,')')
 query_params[['select']] = 'pubmed_id,reference_id'
-query_params[['offset']] = 0
 query_params[['order']] = 'pubmed_id'
 ```
 
@@ -69,20 +105,7 @@ and continue to append them onto our tibble.  **NOTE:** When paging through resu
 
 To be good citizens, we also add a short 'sleep' in between calls to the API.
 ```{r}
-# initialize 'get_text' so we can page through the results
-get_text <- 'NA'
-ref2pmid <- tibble()
-while(get_text != '[]') {
-  url <- paste(base_uri, 'reference_search',sep='')
-  print(paste0("fetching offset: ",query_params[['offset']]))
-  get_1 = GET(url, query=query_params)
-  get_text = content(get_1,'text')
-  resp_tbl <- tibble(fromJSON(get_text))
-  ref2pmid <- rbind(ref2pmid, resp_tbl)
-  query_params[['offset']] = query_params[['offset']] + 10000
-  # sleep for 1 second between calls so as not to overload the server
-  Sys.sleep(1)
-}
+ref2pmid <- iq_query('reference_search',query_params)
 ```
 
 Create a reference ID string to incorporate into downstream queries:
@@ -98,46 +121,18 @@ First, set the query parameters:
 query_params <- list()
 query_params[['reference_id']] = paste0('in.(', ref_id_string,')')
 query_params[['qualitative_measure']] = 'neq.Negative'
-query_params[['select']] = 'reference_id,parent_source_antigen_iri,structure_id,structure_description'
-query_params[['offset']] = 0
+query_params[['select']] = 'reference_id,parent_source_antigen_iri,structure_id,structure_description,curated_source_antigen'
 query_params[['order']] = 'reference_id'
 ```
 
 Now run the query against tcell_search
 ```{r}
-# initialize 'get_text' so we can page through the results
-get_text <- 'NA'
-tcell_epitopes <- tibble()
-while(get_text != '[]') {
-  url <- paste(base_uri, 'tcell_search',sep='')
-  print(paste0("fetching offset: ",query_params[['offset']]))
-  get_1 = GET(url, query=query_params)
-  get_text = content(get_1,'text')
-  resp_tbl <- tibble(fromJSON(get_text))
-  tcell_epitopes <- rbind(tcell_epitopes, resp_tbl)
-  query_params[['offset']] = query_params[['offset']] + 10000
-  # sleep for 1 second between calls so as not to overload the server
-  Sys.sleep(1)
-}
+tcell_epitopes <- iq_query('tcell_search',query_params)
 ```
 
-And then B cell search, after resetting the offset:
+And then B cell search:
 ```{r}
-# initialize 'get_text' so we can page through the results
-query_params[['offset']] = 0
-get_text <- 'NA'
-bcell_epitopes <- tibble()
-while(get_text != '[]') {
-  url <- paste(base_uri, 'bcell_search',sep='')
-  print(paste0("fetching offset: ",query_params[['offset']]))
-  get_1 = GET(url, query=query_params)
-  get_text = content(get_1,'text')
-  resp_tbl <- tibble(fromJSON(get_text))
-  bcell_epitopes <- rbind(bcell_epitopes, resp_tbl)
-  query_params[['offset']] = query_params[['offset']] + 10000
-  # sleep for 1 second between calls so as not to overload the server
-  Sys.sleep(1)
-}
+bcell_epitopes <- iq_query('bcell_search',query_params)
 ```
 
 **NOTE** There are certain cases when the source antigen is unknown/null.  We'll quantify
@@ -161,9 +156,9 @@ tcell_epitopes %>%
   nrow()
 ```
 
+Let's combine all epitopes into one tibble.
 ```{r}
-all_epitopes <- rbind(bcell_epitopes,tcell_epitopes) %>%
-  filter(!is.na(parent_source_antigen_iri))
+all_epitopes <- bind_rows(bcell_epitopes,tcell_epitopes)
 ```
 
 ### References per antigen
@@ -202,30 +197,18 @@ and create the parent_source_antigen_uri later.
 ```{r}
 query_params <- list()
 query_params[['select']] = 'database,accession,name,title,proteome_label'
-query_params[['offset']] = 0
 query_params[['order']] = 'accession'
 ```
 
-Now run the query against tcell_search
+Now run the query against parent_proteins to pull everything out
 ```{r}
-# initialize 'get_text' so we can page through the results
-get_text <- 'NA'
-parent_proteins <- tibble()
-while(get_text != '[]') {
-  url <- paste(base_uri, 'parent_proteins',sep='')
-  print(paste0("fetching offset: ",query_params[['offset']]))
-  get_1 = GET(url, query=query_params)
-  get_text = content(get_1,'text')
-  resp_tbl <- tibble(fromJSON(get_text))
-  parent_proteins <- rbind(parent_proteins, resp_tbl)
-  query_params[['offset']] = query_params[['offset']] + 10000
-  # sleep for 1 second between calls so as not to overload the server
-  Sys.sleep(1)
-}
+parent_proteins <- iq_query('parent_proteins',query_params)
 
 #let's add a psuedo parent_source_antigen_iri
+# we need to add the 'unique' clause because there seem to be ~10K duplicates in the table
 parent_proteins <- parent_proteins %>%
-  mutate(parent_source_antigen_iri = paste0(toupper(database),':',toupper(accession)))
+  mutate(parent_source_antigen_iri = paste0(toupper(database),':',toupper(accession))) %>%
+  unique()
 
 ```
 
@@ -246,6 +229,8 @@ final_summary %>%
   select(antigen_id=parent_source_antigen_iri,
          antigen_title=title,
          num_references,
-         num_peptides)
+         num_peptides) %>%
+  arrange(-num_references, -num_peptides) %>%
+  create_dt()
 
 ```
