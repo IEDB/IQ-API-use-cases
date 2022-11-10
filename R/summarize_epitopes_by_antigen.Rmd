@@ -49,7 +49,9 @@ create_dt <- function(x){
 }
 
 ```
-Let's define a function for running a query and returning a tibble of results:
+Let's define a function for running a query and returning a tibble of results.  Since there may be more than 10K records, we will need to fetch 1 page at a time and continue to append them onto our tibble.  **NOTE:** When paging through results by using an 'offset', it is critical to add an 'order' parameter to ensure that the pages are consistent between queries.
+
+To be good citizens, we also add a short 'sleep' in between calls to the API.
 
 ```{r}
 
@@ -100,10 +102,8 @@ query_params[['select']] = 'pubmed_id,reference_id'
 query_params[['order']] = 'pubmed_id'
 ```
 
-Since there may be more than 10K records, we will need to fetch 1 page at a time
-and continue to append them onto our tibble.  **NOTE:** When paging through results by using an 'offset', it is critical to add an 'order' parameter to ensure that the pages are consistent between queries.
 
-To be good citizens, we also add a short 'sleep' in between calls to the API.
+And pull the data..
 ```{r}
 ref2pmid <- iq_query('reference_search',query_params)
 ```
@@ -140,7 +140,7 @@ those here, but will ignore those epitopes for the remainder of this analysis.
 
 ### Initial summary
 
-Here we summarize the number of T & B cell epitopes retrieved and the number where the source antingen is not null.  We move forward by combining these data.
+Here we summarize the number of T & B cell epitopes retrieved and the number where the source antigen (parent protein) is not null.  We move forward by combining these data.
 
 ```{r}
 bcell_epitopes %>% nrow()
@@ -156,6 +156,8 @@ tcell_epitopes %>%
   nrow()
 ```
 
+In both cases, more so in B cell, there are many records that are not mapped to a parent protein.  We'll investigate down below.
+
 Let's combine all epitopes into one tibble.
 ```{r}
 all_epitopes <- bind_rows(bcell_epitopes,tcell_epitopes)
@@ -163,33 +165,35 @@ all_epitopes <- bind_rows(bcell_epitopes,tcell_epitopes)
 
 ### References per antigen
 
-Let's get the number of references for each antigen first.
+Let's get the number of references for each parent antigen first.
 
 ```{r}
-refs_per_antigen <- all_epitopes %>%
+refs_per_parent_antigen <- all_epitopes %>%
   distinct(reference_id, parent_source_antigen_iri) %>%
   group_by(parent_source_antigen_iri) %>%
   summarize(num_references=n())
 
-refs_per_antigen
+refs_per_parent_antigen %>%
+  create_dt()
 ```
 
 
-### Peptides per antigen
+### Peptides per parent antigen
 
-Now the peptides (including discontinuous sequences) per antigen
+Now the peptides (including discontinuous sequences) per parent antigen
 
 ```{r}
-peps_per_antigen <- all_epitopes %>%
+peps_per_parent_antigen <- all_epitopes %>%
   distinct(parent_source_antigen_iri, structure_id, structure_description) %>%
   group_by(parent_source_antigen_iri) %>%
   summarize(num_peptides=n())
 
-peps_per_antigen
+peps_per_parent_antigen %>%
+  create_dt()
 ```
 
 
-### Source antigen data
+### Source antigen (parent protein) data
 
 Before we put everything together, we need to pull all of the source antigen information.  Since the parent_source_antigen_iri is not yet in the parent_proteins table, we first pull ALL of the parent proteins
 and create the parent_source_antigen_uri later.
@@ -213,19 +217,19 @@ parent_proteins <- parent_proteins %>%
 ```
 
 
-### Final summary
+### Final summary by parent protein
 
 Here, we combine the data into the table of interest
 
 ```{r}
-final_summary <-
-  refs_per_antigen %>%
-  left_join(peps_per_antigen,
+final_summary_by_parent <-
+  refs_per_parent_antigen %>%
+  left_join(peps_per_parent_antigen,
             by='parent_source_antigen_iri') %>%
   left_join(parent_proteins,
             by='parent_source_antigen_iri')
 
-final_summary %>%
+final_summary_by_parent %>%
   select(antigen_id=parent_source_antigen_iri,
          antigen_title=title,
          num_references,
@@ -234,3 +238,22 @@ final_summary %>%
   create_dt()
 
 ```
+
+As we can see by the row with an empty antigen_id & antigen_title, there are a good number of proteins that are not mapped to a parent protein.  So let's have a closer look at those, specifically:
+
+```{r}
+# first pull out the curated antigen info into separate columns
+all_epitopes <- all_epitopes %>%
+  mutate(curated_antigen_accession=curated_source_antigen$accession,
+         curated_antigen_name=curated_source_antigen$name)
+
+all_epitopes %>%
+  filter(is.na(parent_source_antigen_iri)) %>%
+  select(reference_id, structure_id, structure_description,
+         curated_antigen_accession, curated_antigen_name) %>%
+  distinct() %>%
+  create_dt()
+
+```
+
+Interesting!  None of them have curated source antigens, so we should investigate why and ignore them if there is a good explanation.
