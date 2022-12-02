@@ -49,29 +49,37 @@ create_dt <- function(x){
 }
 
 ```
-Let's define a function for running a query and returning a tibble of results.  Since there may be more than 10K records, we will need to fetch 1 page at a time and continue to append them onto our tibble.  **NOTE:** When paging through results by using an 'offset', it is critical to add an 'order' parameter to ensure that the pages are consistent between queries.
+We define a function to query the API.  Since I know there will be more than 10K records, we will need to fetch 1 page at a time
+and continue to append them onto our tibble.  **NOTE:** When paging through results by using an 'offset', it is critical to add an 'order' parameter to ensure that the pages are consistent between queries.
 
 To be good citizens, we also add a short 'sleep' in between calls to the API.
-
 ```{r}
 
-iq_query <- function(endpoint, query_params, base_uri='https://query-api.iedb.org/') {
+iq_query <- function(endpoint, 
+                     query_params, 
+                     base_uri='https://query-api.iedb.org/',
+                     page_size = 10000) {
 
-  # set the offset to 0
-  query_params[['offset']] <-0
-  
   # initialize 'get_text' so we can page through the results
   get_text <- 'NA'
   final_tbl <- tibble()
+  url <- paste(base_uri, endpoint,sep='')
+  
+  # set the offset to 0
+  offset <- 0
+  
+  # we must be careful not to use scientific notation with the offset parameter
+  query_params[['offset']] <- format(offset, scientific = F)
+
   while(get_text != '[]') {
-    url <- paste(base_uri, endpoint,sep='')
-    print(paste0("fetching offset: ",query_params[['offset']]))
+    print(paste0("fetching offset: ", query_params[['offset']]))
     #TODO: wrap this in a try block
     get_1 = GET(url, query=query_params)
     get_text = content(get_1,'text')
     resp_tbl <- tibble(fromJSON(get_text))
     final_tbl <- rbind(final_tbl, resp_tbl)
-    query_params[['offset']] = query_params[['offset']] + 10000
+    offset <- offset + page_size
+    query_params[['offset']] = format(offset, scientific = F)
     # sleep for 1 second between calls so as not to overload the server
     Sys.sleep(1)
   }
@@ -80,6 +88,7 @@ iq_query <- function(endpoint, query_params, base_uri='https://query-api.iedb.or
   final_tbl
 
 }
+
 
 ```
 
@@ -200,20 +209,13 @@ and create the parent_source_antigen_uri later.
 
 ```{r}
 query_params <- list()
-query_params[['select']] = 'database,accession,name,title,proteome_label'
+query_params[['select']] = 'iri,database,accession,name,title,proteome_label'
 query_params[['order']] = 'accession'
 ```
 
 Now run the query against parent_proteins to pull everything out
 ```{r}
 parent_proteins <- iq_query('parent_proteins',query_params)
-
-#let's add a psuedo parent_source_antigen_iri
-# we need to add the 'unique' clause because there seem to be ~10K duplicates in the table
-parent_proteins <- parent_proteins %>%
-  mutate(parent_source_antigen_iri = paste0(toupper(database),':',toupper(accession))) %>%
-  unique()
-
 ```
 
 
@@ -227,7 +229,7 @@ final_summary_by_parent <-
   left_join(peps_per_parent_antigen,
             by='parent_source_antigen_iri') %>%
   left_join(parent_proteins,
-            by='parent_source_antigen_iri')
+            by=c('parent_source_antigen_iri'='iri'))
 
 final_summary_by_parent %>%
   select(antigen_id=parent_source_antigen_iri,

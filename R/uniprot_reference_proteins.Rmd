@@ -34,12 +34,6 @@ library(readr)
 library(dplyr)
 ```
 
-Define the base URI of the IEDB Query API.
-
-```{r}
-base_uri = 'https://query-api.iedb.org/'
-```
-
 
 ## Retrieve list of IEDB Uniprot IDs
 
@@ -52,25 +46,47 @@ params[['offset']] = 0
 params[['order']] = 'parent_source_antigen_id'
 ```
 
-Since I know there will be more than 10K records, we will need to fetch 1 page at a time
+We define a function to query the API.  Since I know there will be more than 10K records, we will need to fetch 1 page at a time
 and continue to append them onto our tibble.  **NOTE:** When paging through results by using an 'offset', it is critical to add an 'order' parameter to ensure that the pages are consistent between queries.
 
 To be good citizens, we also add a short 'sleep' in between calls to the API.
 ```{r}
-# initialize 'get_text' so we can page through the results
-get_text <- 'NA'
-full_tbl <- tibble()
-while(get_text != '[]') {
-  url <- paste(base_uri, 'antigen_search',sep='')
-  print(paste0("fetching offset: ",params[['offset']]))
-  get_1 = GET(url, query=params)
-  get_text = content(get_1,'text')
-  resp_tbl <- tibble(fromJSON(get_text))
-  full_tbl <- rbind(full_tbl, resp_tbl)
-  params[['offset']] = params[['offset']] + 10000
-  # sleep for 1 second between calls so as not to overload the server
-  Sys.sleep(1)
+
+iq_query <- function(endpoint, 
+                     query_params, 
+                     base_uri='https://query-api.iedb.org/',
+                     page_size = 10000) {
+
+  # initialize 'get_text' so we can page through the results
+  get_text <- 'NA'
+  final_tbl <- tibble()
+  url <- paste(base_uri, endpoint,sep='')
+  
+  # set the offset to 0
+  offset <- 0
+  
+  # we must be careful not to use scientific notation with the offset parameter
+  query_params[['offset']] <- format(offset, scientific = F)
+
+  while(get_text != '[]') {
+    print(paste0("fetching offset: ", query_params[['offset']]))
+    #TODO: wrap this in a try block
+    get_1 = GET(url, query=query_params)
+    get_text = content(get_1,'text')
+    resp_tbl <- tibble(fromJSON(get_text))
+    final_tbl <- rbind(final_tbl, resp_tbl)
+    offset <- offset + page_size
+    query_params[['offset']] = format(offset, scientific = F)
+    # sleep for 1 second between calls so as not to overload the server
+    Sys.sleep(1)
+  }
+
+  # return the final_tbl
+  final_tbl
+
 }
+
+full_tbl <- iq_query('antigen_search', params)
 ```
 
 
@@ -151,4 +167,4 @@ collapsed_tbl %>%
   summarize(n_uniprot_ids=n())
 
 ```
-This table shows how many PDB IDs are associated with IEDB Uniprot IDs. So, e.g., 62,504 Uniprot IDs are associated with 0 PDB IDs, 3,236 are associated with 1, and so on... 
+This table shows how many PDB IDs are associated with IEDB Uniprot IDs. So, e.g., 67,685 Uniprot IDs are associated with 0 PDB IDs, 3,238 are associated with 1, and so on... 
